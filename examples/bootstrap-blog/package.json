@@ -1,5 +1,5 @@
 {
-  "name": "crownpeak-dxm-vuejs-sdk-example-bootstrap-homepage",
+  "name": "crownpeak-dxm-vuejs-sdk-example-bootstrap-blog",
   "version": "1.0.0",
   "description": "Crownpeak Digital Experience Management (DXM) Software Development Kit (SDK) for Vue.js has been constructed to assist the Single Page App developer in developing client-side applications that leverage DXM for content management purposes.",
   "main": "./js/index.js",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "dotenv-webpack": "^1.7.0",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
