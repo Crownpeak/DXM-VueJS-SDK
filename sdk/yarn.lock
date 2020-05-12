@@ -219,6 +219,13 @@ crownpeak-dxm-accessapi-helper@^1.0.2:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
+crownpeak-dxm-sdk-core@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-0.1.1.tgz#80160fd3e85859be37b09c29d3cbf0e5932987c5"
+  integrity sha512-kfkkz0XpUNlrRM+oQWRNdv4Pt2/0cMg1QPFOssv+qJ9lRE2hkeqobKs8KIQKZdIUbobbCfmDcvQvPfztDuEA1g==
+  dependencies:
+    crownpeak-dxm-accessapi-helper "^1.0.2"
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"

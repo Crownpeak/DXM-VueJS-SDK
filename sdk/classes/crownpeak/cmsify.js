@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const dotenv = require("dotenv");
 const fs = require("fs");
 

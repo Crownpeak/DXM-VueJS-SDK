@@ -8,7 +8,11 @@
   "dependencies": {
     "@babel/parser": "^7.9.6",
     "crownpeak-dxm-accessapi-helper": "^1.0.2",
+    "crownpeak-dxm-sdk-core": "^0.1.1",
     "dotenv": "^8.2.0",
     "vue": "^2.6.11"
+  },
+  "bin": {
+    "crownpeak": "./classes/crownpeak/cmsify.js"
   }
 }
