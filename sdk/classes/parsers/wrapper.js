@@ -1,4 +1,6 @@
+const fs = require("fs");
 const path = require('path');
+const cssParser = require("./css");
 
 const reSignature = new RegExp("<([a-z:0-9]+).*?data-cms-wrapper-name\\s*=\\s*[\"']([^\"']+)[\"'](?:.|\\r|\\n)*?<\\/\\1>", "im");
 
@@ -65,11 +67,23 @@ const replaceLinks = (file, content) => {
             if (matches[2].indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
                 //console.log(`Found link candidate ${matches[2]}`);
                 const filename = path.basename(matches[2]);
-                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/_Assets/css/${filename}\").GetLink() %>`;
+                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/_Assets/css/${filename}\").GetLink(LinkType.Include) %>`;
                 if (!matches[1]) replacement = `\"${replacement}\"`;
                 //console.log(`Replacement is ${replacement}`);
                 result = result.replace(matches[2], replacement)
-                uploads.push({source: path.join(folder, matches[2]), name: filename, destination: "_Assets/css/"});
+
+                const filepath = path.join(folder, matches[2]);
+                if (fs.existsSync(filepath)) {
+                    const result = cssParser.parse(filepath, fs.readFileSync(filepath, "utf8"), folder);
+                    if (result.content && result.uploads && result.uploads.length) {
+                        uploads.push({source: filepath, name: filename, destination: "_Assets/css/", content: result.content});
+                        uploads = uploads.concat(result.uploads);
+                    } else {
+                        uploads.push({source: filepath, name: filename, destination: "_Assets/css/"});
+                    }
+                } else {
+                    uploads.push({source: filepath, name: filename, destination: "_Assets/css/"});
+                }
             }
         }
     }

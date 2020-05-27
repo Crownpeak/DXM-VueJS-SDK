@@ -46,10 +46,10 @@ const parse = (content) => {
                 name = name.value.value;
                 //console.log(`Found page ${name} extending ${extnds.value.name}`);
                 const data = processCmsPage(content, ast, name, part.declaration, imports);
-                if (data) {
-                    const result = processCmsPageTemplate(content, name, template, data, imports);
+                if (data && data.components) {
+                    const result = processCmsPageTemplate(content, name, template, data.components, imports);
                     if (result) {
-                        results.push({name: name, content: finalProcessMarkup(result)});
+                        results.push({name: name, content: finalProcessMarkup(result), wrapper: data.wrapper});
                     }
                 }
             }
@@ -135,7 +135,12 @@ const processCmsPage = (content, ast, name, declaration, imports) => {
             }
         }
     }
-    return results;
+    let wrapper = declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "cmsWrapper");
+    if (wrapper) {
+        //console.log(`Found reference to wrapper [${wrapper}]`);
+        wrapper = wrapper.value.value;
+    }
+    return {components: results, wrapper: wrapper};
 };
 
 module.exports = {

@@ -27,8 +27,19 @@ const createFileFromModel = async (name, folderId, modelId) => {
 };
 
 const createFile = async (name, folderId, templateId, workflowId) => {
-    const request = new crownpeak.Asset.CreateRequest(name, folderId, 0, 2, -1, templateId, workflowId, 0);
+    const request = new crownpeak.Asset.CreateRequest(name, folderId, 0, 2, templateId > 0 ? -1 : 1, templateId, workflowId, 0);
     return crownpeak.Asset.create(request);
+};
+
+const createOrUpdateDeveloperCsFile = async (name, folderId, workflowId, content) => {
+    let path = await getPath(folderId);
+    let result = await exists(path + name);
+    let assetId = result.assetId;
+    if (!result.exists) {
+        // No asset exists, so create one
+        assetId = (await createFile(name, folderId, 0, workflowId)).asset.id;
+    }
+    return update(assetId, content);
 };
 
 const createOrUpdateFile = async (name, folderId, modelId, content) => {
@@ -205,7 +216,7 @@ const createOrUpdateTemplate = async (shortName, markup, shortWrapperName) => {
 const processTemplates = async (templates, wrapperName) => {
     for (let i in templates) {
         const template = templates[i];
-        let result = await createOrUpdateTemplate(template.name, template.content, wrapperName);
+        let result = await createOrUpdateTemplate(template.name, template.content, template.wrapper || wrapperName);
         template.assetId = result.asset.id;
         template.assetPath = await getPath(template.assetId);
         console.log(`Saved template [${template.name}] as [${template.assetPath}] (${template.assetId})`);
@@ -252,7 +263,7 @@ const processUploads = async (uploads) => {
     const siteRootPath = await getSiteRootPath();
     for (let i = 0, len = uploads.length; i < len; i++) {
         let upload = uploads[i];
-        if (!fs.existsSync(upload.source)) {
+        if (!upload.content && !fs.existsSync(upload.source)) {
             console.warn(`Unable to find source file [${upload.source}] for upload`);
             continue;
         }
@@ -260,7 +271,16 @@ const processUploads = async (uploads) => {
         if (!folder || !folder.asset) {
             console.error(`Unable to find folder [${siteRootPath}${upload.destination}] for upload`);
         } else {
-            const uploadedFile = await uploadFile(upload.name, folder.asset.id, -1, upload.source, -1);
+            let uploadedFile;
+            if (upload.content) {
+                uploadedFile = await createOrUpdateDeveloperCsFile(upload.name, folder.asset.id, -1, { body: upload.content });
+                if (!uploadedFile.asset.fullPath) {
+                    uploadedFile.asset.fullPath = await getPath(uploadedFile.asset.id);
+                }
+        
+            } else {
+                uploadedFile = await uploadFile(upload.name, folder.asset.id, -1, upload.source, -1);
+            }
             upload.assetId = uploadedFile.asset.id;
             upload.assetPath = uploadedFile.asset.fullPath;
         }

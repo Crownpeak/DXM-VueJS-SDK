@@ -102,7 +102,7 @@ name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset whe
     import Footer from '../components/footer.vue';
 
     export default {
-        extends: CmsDynamicPage,
+        extends: CmsStaticPage,
         name: "BlogPage",
         components: {
             Header,
@@ -112,7 +112,8 @@ name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset whe
             BlogPost,
             PostArchives,
             Footer
-        }
+        },
+        cmsWrapper: "" //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
     };
 </script>
 ```
@@ -164,7 +165,7 @@ Loads payload data from DXM Dynamic Content API upon request - expects knowledge
     import Footer from '../components/footer.vue';
 
     export default {
-        extends: CmsStaticPage,
+        extends: CmsDynamicPage,
         name: "BlogPage",
         components: {
             Header,
@@ -174,7 +175,8 @@ Loads payload data from DXM Dynamic Content API upon request - expects knowledge
             BlogPost,
             PostArchives,
             Footer
-        }
+        },
+        cmsWrapper: "" //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
     };
 </script>
 ```

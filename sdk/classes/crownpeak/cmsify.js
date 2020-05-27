@@ -35,6 +35,9 @@ const main = () => {
             wrappers.push(result.wrapper);
         }
     }
+    if (uploads && uploads.length) {
+        uploads = removeDuplicateUploads(uploads);
+    }
     const vueFiles = files.getRecursive(process.env.INIT_CWD, "vue");
     for (let f in vueFiles) {
         //console.log(`Processing ${vueFiles[f]}`);
@@ -96,6 +99,13 @@ const processSimpleDependencies = (processedComponents, components) => {
     let simpleDependencies = components.filter(c => c.dependencies.every(d => processedComponents.findIndex(r => r.name === d) > -1));
     return processedComponents.concat(simpleDependencies);
 };
+
+const removeDuplicateUploads = (uploads) => {
+    var seen = {};
+    return uploads.filter(function(item) {
+        return seen.hasOwnProperty(item.source) ? false : (seen[item.source] = true);
+    });
+}
 
 const validateInput = (config) => {
     let ok = true;
