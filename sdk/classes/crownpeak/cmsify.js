@@ -5,7 +5,7 @@ const fs = require("fs");
 const _args = process.argv.slice(2);
 
 const main = () => {
-    const cwd = process.env.INIT_CWD;
+    const cwd = process.env.INIT_CWD || require('path').resolve('.');
     let config = process.env;
     // Merge in any environment changes they provided
     if (fs.existsSync(cwd + "/.env")) {
@@ -22,7 +22,7 @@ const main = () => {
     const files = require("../utils/files");
 
     let components = [], pages = [], wrappers = [], uploads = [];
-    const htmlfiles = files.getRecursive(process.env.INIT_CWD, "html");
+    const htmlfiles = files.getRecursive(cwd, "html");
     for (let f in htmlfiles) {
         //console.log(`Processing ${htmlfiles[f]}`);
         let result = parser.process(htmlfiles[f]);
@@ -38,7 +38,7 @@ const main = () => {
     if (uploads && uploads.length) {
         uploads = removeDuplicateUploads(uploads);
     }
-    const vueFiles = files.getRecursive(process.env.INIT_CWD, "vue");
+    const vueFiles = files.getRecursive(cwd, "vue");
     for (let f in vueFiles) {
         //console.log(`Processing ${vueFiles[f]}`);
         let result = parser.process(vueFiles[f]);
@@ -53,17 +53,25 @@ const main = () => {
     }
     components = reorderComponents(components);
 
-    // console.log(`Components: ${components.map(c => c.name)}`);
-    // console.log(`Pages: ${pages.map(p => p.name)}`);
-    // console.log(`Wrappers: ${wrappers.map(w => w.name)}`);
-    // console.log(`Uploads: ${uploads.map(u => u.name)}`);
+    const noop = () => {};
+    const noComponents = _args.findIndex(a => a.toLowerCase() === "--nocomponents") > -1;
+    const noPages = _args.findIndex(a => a.toLowerCase() === "--nopages") > -1;
+    const noWrappers = _args.findIndex(a => a.toLowerCase() === "--nowrappers") > -1;
+    const noUploads = _args.findIndex(a => a.toLowerCase() === "--nouploads") > -1;
 
-    cms.login()
-    .then(() => cms.saveUploads(uploads)) //.then((result) => console.log(JSON.stringify(result))))
-    .then(() => cms.saveWrappers(wrappers)) //.then((result) => console.log(JSON.stringify(result))))
-    .then(() => cms.saveComponents(components)) //.then((result) => console.log(JSON.stringify(result))))
-    .then(() => cms.saveTemplates(pages, wrappers.length > 0 ? wrappers[0].name : "")) //.then((result) => console.log(JSON.stringify(result))))
-    ;
+    if (_args.findIndex(a => a.toLowerCase() === "--dry-run") > -1) {
+        noComponents ? noop : console.log(`Components: ${components.map(c => c.name)}`);
+        noPages ? noop : console.log(`Pages: ${pages.map(p => p.name)}`);
+        noWrappers ? noop : console.log(`Wrappers: ${wrappers.map(w => w.name)}`);
+        noUploads ? noop : console.log(`Uploads: ${uploads.map(u => u.name)}`);
+    } else {
+        cms.login()
+        .then(() => noUploads ? noop : cms.saveUploads(uploads)) //.then((result) => console.log(JSON.stringify(result))))
+        .then(() => noWrappers ? noop : cms.saveWrappers(wrappers)) //.then((result) => console.log(JSON.stringify(result))))
+        .then(() => noComponents ? noop : cms.saveComponents(components)) //.then((result) => console.log(JSON.stringify(result))))
+        .then(() => noPages ? noop : cms.saveTemplates(pages, wrappers.length > 0 ? wrappers[0].name : "")) //.then((result) => console.log(JSON.stringify(result))))
+        ;
+    }
 };
 
 const reorderComponents = (components) => {
