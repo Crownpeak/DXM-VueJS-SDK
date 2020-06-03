@@ -10,7 +10,7 @@
     "start": "node_modules/.bin/webpack-dev-server --progress --inline --hot"
   },
   "dependencies": {
-    "crownpeak-dxm-vuejs-sdk": "^1.0.0",
+    "crownpeak-dxm-vuejs-sdk": "^1.0.1",
     "dotenv-webpack": "^1.7.0",
     "vue": "^2.6.11"
   },

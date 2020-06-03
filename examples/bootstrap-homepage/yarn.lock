@@ -1797,21 +1797,21 @@ crownpeak-dxm-accessapi-helper@^1.0.2:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
-crownpeak-dxm-sdk-core@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-0.1.1.tgz#80160fd3e85859be37b09c29d3cbf0e5932987c5"
-  integrity sha512-kfkkz0XpUNlrRM+oQWRNdv4Pt2/0cMg1QPFOssv+qJ9lRE2hkeqobKs8KIQKZdIUbobbCfmDcvQvPfztDuEA1g==
+crownpeak-dxm-sdk-core@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-0.1.2.tgz#7193d948e2e7791dd4b87cbde7a91254467dfd13"
+  integrity sha512-FQeuySCagUL4L0JqstSrx2ymaiIOWIuUKotlop7X3YGxrFoGsr3YAyOehbthdy88lriRybg80inoMhFuBBQXpw==
   dependencies:
     crownpeak-dxm-accessapi-helper "^1.0.2"
 
-crownpeak-dxm-vuejs-sdk@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-vuejs-sdk/-/crownpeak-dxm-vuejs-sdk-1.0.0.tgz#33272690483cf0e4bb75e82638557924ee6d40b0"
-  integrity sha512-5N72bagUQUc+IE7e7v+0gRu4wcBHdbo/sDsWzOVP6uDDF88gXvRW6z0oN5TnzZ56Vz7Q2EQlGTAn/o7GS8mp1w==
+crownpeak-dxm-vuejs-sdk@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-vuejs-sdk/-/crownpeak-dxm-vuejs-sdk-1.0.1.tgz#a5a6d94f493edd467af74038e69c79496a5323ca"
+  integrity sha512-RSIcNyK+FwOZ13rX9VEmYK8KjKraLhOA9NDy0DyKQraPBN2cKqF7TPlfC7+V+9zUrOi4SUPtMH6fZ1qOSGW1rA==
   dependencies:
     "@babel/parser" "^7.9.6"
     crownpeak-dxm-accessapi-helper "^1.0.2"
-    crownpeak-dxm-sdk-core "^0.1.1"
+    crownpeak-dxm-sdk-core "^0.1.2"
     dotenv "^8.2.0"
     vue "^2.6.11"
 

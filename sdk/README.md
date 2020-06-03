@@ -42,3 +42,4 @@ Data Sources**
 | Version       | Date          | Changes                            |
 | ------------- | --------------|----------------------------------- |
 | 1.0.0         | 2020MAY12     | Initial Release.                   |
+| 1.0.1         | 2020JUN03     | Updated crownpeak-dxm-sdk-core version. Added command line parameters. Bug fixes.    |
