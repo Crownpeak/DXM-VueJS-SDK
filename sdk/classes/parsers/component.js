@@ -144,14 +144,25 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
         const props = data.body.body[0].argument.properties;
         for (let i = 0; len = props.length, i < len; i++) {
             const prop = props[i];
-            if (prop.value && prop.value.callee && prop.value.callee.name === "CmsField" && prop.value.arguments) {
+            if (prop.value && prop.value.callee && prop.value.callee.name === "CmsField" && prop.value.arguments && prop.value.arguments.length > 1) {
                 const args = prop.value.arguments;
-                //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].property.name}]`);
-                results.push({
-                    name: prop.key.name,
-                    fieldName: args[0].value,
-                    fieldType: cmsFieldTypeToString(args[1].property.name)
-                });
+                if (args[1].property && args[1].property.name) {
+                    // Items of the form CmsField("Heading", CmsFieldTypes.TEXT)
+                    //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].property.name}]`);
+                    results.push({
+                        name: prop.key.name,
+                        fieldName: args[0].value,
+                        fieldType: cmsFieldTypeToString(args[1].property.name)
+                    });
+                } else if (args[1].type === "StringLiteral" && args[1].value) {
+                    // Items of the form CmsField("Heading", "FieldType")
+                    //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].value}]`);
+                    results.push({
+                        name: prop.key.name,
+                        fieldName: args[0].value,
+                        fieldType: cmsFieldTypeToString(args[1].value)
+                    });
+                }
             }
         }
     }
@@ -174,8 +185,11 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
 
 const cmsFieldTypeToString = (cmsFieldType) => {
     if (cmsFieldType === "IMAGE") return "Src";
-    // TODO: robusify this!
-    return cmsFieldType[0] + cmsFieldType.substr(1).toLowerCase();
+    if (cmsFieldType === cmsFieldType.toUpperCase()) {
+        // TODO: robusify this!
+        return cmsFieldType[0] + cmsFieldType.substr(1).toLowerCase();
+    }
+    return cmsFieldType;
 };
 
 module.exports = {
