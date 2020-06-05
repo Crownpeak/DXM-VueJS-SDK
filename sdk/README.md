@@ -43,3 +43,4 @@ Data Sources**
 | ------------- | --------------|----------------------------------- |
 | 1.0.0         | 2020MAY12     | Initial Release.                   |
 | 1.0.1         | 2020JUN03     | Updated crownpeak-dxm-sdk-core version. Added command line parameters. Bug fixes.    |
+| 1.0.2         | 2020JUN05     | String for CmsFieldType. HTML components now supported in Wrappers. CSS parser updated for relative files.    |
