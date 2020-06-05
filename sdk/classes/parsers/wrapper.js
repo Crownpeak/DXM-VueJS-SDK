@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require('path');
 const cssParser = require("./css");
 
-const reSignature = new RegExp("<([a-z:0-9]+).*?data-cms-wrapper-name\\s*=\\s*[\"']([^\"']+)[\"'](?:.|\\r|\\n)*?<\\/\\1>", "im");
+const reSignature = new RegExp("<([a-z:0-9\\-]+).*?data-cms-wrapper-name\\s*=\\s*[\"']([^\"']+)[\"'](?:.|\\r|\\n)*?<\\/\\1>", "im");
 
 const parse = (file, content) => {
     const match = content.match(reSignature);
