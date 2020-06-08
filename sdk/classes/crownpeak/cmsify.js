@@ -54,10 +54,10 @@ const main = () => {
     components = reorderComponents(components);
 
     const noop = () => {};
-    const noComponents = _args.findIndex(a => a.toLowerCase() === "--nocomponents") > -1;
-    const noPages = _args.findIndex(a => a.toLowerCase() === "--nopages") > -1;
-    const noWrappers = _args.findIndex(a => a.toLowerCase() === "--nowrappers") > -1;
-    const noUploads = _args.findIndex(a => a.toLowerCase() === "--nouploads") > -1;
+    const noComponents = _args.findIndex(a => a.toLowerCase() === "--nocomponents") > -1 || _args.findIndex(a => a.toLowerCase() === "--no-components") > -1;
+    const noPages = _args.findIndex(a => a.toLowerCase() === "--nopages") > -1 || _args.findIndex(a => a.toLowerCase() === "--no-pages") > -1;
+    const noWrappers = _args.findIndex(a => a.toLowerCase() === "--nowrappers") > -1 || _args.findIndex(a => a.toLowerCase() === "--no-wrappers") > -1;
+    const noUploads = _args.findIndex(a => a.toLowerCase() === "--nouploads") > -1 || _args.findIndex(a => a.toLowerCase() === "--no-uploads") > -1;
 
     if (_args.findIndex(a => a.toLowerCase() === "--dry-run") > -1) {
         noComponents ? noop : console.log(`Components: ${components.map(c => c.name)}`);
