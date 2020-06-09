@@ -219,6 +219,18 @@ crownpeak-dxm-accessapi-helper@^1.0.2:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
+crownpeak-dxm-accessapi-helper@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-accessapi-helper/-/crownpeak-dxm-accessapi-helper-1.0.3.tgz#26f75c6bf167b549adc41bf5a67e980e0ba909ee"
+  integrity sha512-ft563zEeRxhZW4L+KaOEF7JHs+rlZ2Nzudkyw3Nx5OqFg631LwHc3rgtMCsGIdnX3jNc50gMAmjD//3FslCH6A==
+  dependencies:
+    istextorbinary "^2.5.1"
+    mocha "^7.1.2"
+    react-native-dotenv "^0.2.0"
+    request "^2.88.0"
+    request-promise "^4.2.4"
+    request-promise-native "^1.0.7"
+
 crownpeak-dxm-sdk-core@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-0.1.3.tgz#836128c8c8cec0a32dcc18603a7c285569dd4160"

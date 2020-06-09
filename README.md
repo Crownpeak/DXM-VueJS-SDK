@@ -209,6 +209,36 @@ Includes CmsField references for content rendering from DXM within a Vue.js Comp
 </script>
 ```
 
+### CmsDropZoneComponent
+Enables implementation of draggable components via DXM. Example usage below:
+```
+<script>
+    import { CmsDropZoneComponent } from 'crownpeak-dxm-vuejs-sdk';
+
+    import PrimaryCTA from "../components/primaryCta";
+    import SecondaryCTA from "../components/secondaryCta";
+
+    export default {
+        extends: CmsDropZoneComponent,
+        name: "DropZone",
+        props: ['name'],
+        render: function(h) {
+            const componentRegistry = {
+                "PrimaryCTA": PrimaryCTA,
+                "SecondaryCTA": SecondaryCTA
+            }
+            return h('div', { className:'row'}, this.getComponents(h, componentRegistry))
+        }
+    };
+</script>
+```
+
+Example implementation upon a ```CmsStaticPage``` or ```CmsDynamicPage```:
+```
+<DropZone name="Test"/>
+```
+For further details, see examples/bootstrap-homepage project.
+
 ### CmsFieldType
 Enumeration containing field types supported within the SDK.
 
