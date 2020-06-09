@@ -99,6 +99,10 @@ const getPath = async (id) => {
     return (await get(id)).asset.fullPath;
 };
 
+const recompileLibrary = async (id) => {
+    return crownpeak.Tools.recompileLibrary(id);
+};
+
 const update = async (id, content, deleteContent = []) => {
     const request = new crownpeak.Asset.UpdateRequest(id, content, deleteContent, true, true);
     return crownpeak.Asset.update(request);
@@ -137,12 +141,15 @@ const createOrUpdateComponent = async (className, markup, deferCompilation = fal
 
 const processComponents = async (components) => {
     for (let i in components) {
-        const last = parseInt(i) === components.length - 1;
         const component = components[i];
-        const result = await createOrUpdateComponent(component.name, component.content, !last);
+        const result = await createOrUpdateComponent(component.name, component.content, true);
         component.assetId = result.asset.id;
         component.assetPath = await getPath(component.assetId);
         console.log(`Saved component [${component.name}] as [${component.assetPath}] (${component.assetId})`);
+    }
+    if (components.length > 0) {
+        const libraryFolder = await getLibraryFolder();
+        recompileLibrary(libraryFolder.id);
     }
     return components;
 };
