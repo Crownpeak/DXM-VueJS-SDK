@@ -66,10 +66,11 @@ const main = () => {
         noUploads ? noop : console.log(`Uploads: ${uploads.map(u => u.name)}`);
     } else {
         cms.login()
-        .then(() => noUploads ? noop : cms.saveUploads(uploads)) //.then((result) => console.log(JSON.stringify(result))))
-        .then(() => noWrappers ? noop : cms.saveWrappers(wrappers)) //.then((result) => console.log(JSON.stringify(result))))
-        .then(() => noComponents ? noop : cms.saveComponents(components)) //.then((result) => console.log(JSON.stringify(result))))
-        .then(() => noPages ? noop : cms.saveTemplates(pages, wrappers.length > 0 ? wrappers[0].name : "")) //.then((result) => console.log(JSON.stringify(result))))
+        .then(() => cms.verifyEnvironment())
+        .then(() => noUploads ? noop : cms.saveUploads(uploads))
+        .then(() => noWrappers ? noop : cms.saveWrappers(wrappers))
+        .then(() => noComponents ? noop : cms.saveComponents(components))
+        .then(() => noPages ? noop : cms.saveTemplates(pages, wrappers.length > 0 ? wrappers[0].name : ""))
         ;
     }
 };

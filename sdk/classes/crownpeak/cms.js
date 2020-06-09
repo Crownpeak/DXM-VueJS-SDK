@@ -289,6 +289,30 @@ const processUploads = async (uploads) => {
     return uploads;
 };
 
+const verifyEnvironment = async () => {
+    await fatalTest(getSiteRootPath, "Unable to find Site Root");
+    await fatalTest(getProjectPath, "Unable to find Project");
+    await fatalTest(getLibraryFolder, "Unable to find 'Library' folder");
+    await fatalTest(getComponentDefinitionFolder, "Unable to find 'Component Definitions' folder");
+    await fatalTest(getTemplateDefinitionFolder, "Unable to find 'Template Definitions' folder");
+    await fatalTest(getWrapperDefinitionFolder, "Unable to find 'Wrapper Definitions' folder");
+    await fatalTest(getModelsFolder, "Unable to find 'Models' folder");
+    await fatalTest(getTemplatesFolder, "Unable to find 'Templates' folder");
+    await fatalTest(getComponentDefinitionModel, "Unable to find 'Enhanced Component' model");
+    await fatalTest(getTemplateDefinitionModel, "Unable to find 'Enhanced Template' model");
+    await fatalTest(getWrapperDefinitionModel, "Unable to find 'Wrapper' model");
+    return true;
+};
+
+const fatalTest = async (fn, message, exitCode = 1) => {
+    try {
+        await fn();
+    } catch (ex) {
+        console.error(message);
+        process.exit(exitCode);
+    }
+};
+
 /* End: Convenience Methods */
 
 /* Start: Internal Helpers */
@@ -304,6 +328,13 @@ const getProjectPath = async () => {
     if (parseInt(projectPath)) projectPath = await getPath(projectPath);
     if (projectPath.slice(-1) !== "/") projectPath += "/";
     return projectPath;
+};
+
+const getLibraryFolder = async () => {
+    const projectPath = await getProjectPath();
+    const result = await get(`${projectPath}Library`);
+    if (!result || !result.asset) throw "Unable to find 'Library' folder";
+    return result.asset;
 };
 
 const getComponentDefinitionFolder = async () => {
@@ -439,5 +470,6 @@ module.exports = {
     saveTemplates: processTemplates,
     saveWrapper: createOrUpdateWrapper,
     saveWrappers: processWrappers,
-    saveUploads: processUploads
+    saveUploads: processUploads,
+    verifyEnvironment: verifyEnvironment
 };
