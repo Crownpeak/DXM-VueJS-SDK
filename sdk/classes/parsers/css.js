@@ -3,6 +3,7 @@ const path = require('path');
 
 // TODO: imports
 const reUrl = /url\s*\(\s*([^)]*)\s*\)/ig;
+const reContent = /content\s*:\s*\s*(["'])(.)\1/ig;
 
 const parse = (file, content, folderRoot) => {
     //console.log(`DEBUG: CSS Parsing ${file}`);
@@ -31,6 +32,13 @@ const replaceUrls = (file, content, folderRoot) => {
                     uploads.push({source: filepath, name: filename, destination: dest});
                 }
             }
+        }
+    }
+    while (matches = reContent.exec(result)) {
+        // Replace unicode expressions with escaped values, else we mangle them
+        const char = matches[2].charCodeAt(0);
+        if (char > 127) {
+            result = result.replace(matches[0], `content:"\\${char.toString(16).toUpperCase()}"`)
         }
     }
     return { content: result, uploads: uploads };
