@@ -9,15 +9,17 @@
                 <SecondaryContainer/>
                 <SecondaryContainer/>
             </div>
+            <DropZone name="secondary"/>
         </div>
         <hr/>
     </div>
 </template>
 <script>
     import Vue from 'vue';
-    import { CmsDynamicPage } from 'crownpeak-dxm-vuejs-sdk';
-    import HeroContainer from '../components/heroContainer.vue';
-    import SecondaryContainer from '../components/secondaryContainer.vue';
+    import { CmsDynamicPage, CmsStaticPage } from 'crownpeak-dxm-vuejs-sdk';
+    import HeroContainer from '../components/heroContainer';
+    import SecondaryContainer from '../components/secondaryContainer';
+    import DropZone from "../components/dropZone";
 
     Vue.prototype.$cmsAssetId = 266437;
 
@@ -25,6 +27,7 @@
         extends: CmsDynamicPage,
         name: "HomePage",
         components: {
+            DropZone,
             HeroContainer,
             SecondaryContainer
         }

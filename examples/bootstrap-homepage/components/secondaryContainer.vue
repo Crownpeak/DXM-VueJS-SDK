@@ -10,11 +10,12 @@
     export default {
         extends: CmsComponent,
         name: "SecondaryContainer",
+        props: ['data'],
         data() {
             return {
-                heading: new CmsField("Heading", CmsFieldTypes.TEXT),
-                description: new CmsField("Description", CmsFieldTypes.WYSIWYG),
-                button_text: new CmsField("Button_Text", CmsFieldTypes.TEXT)
+                heading: new CmsField("Heading", CmsFieldTypes.TEXT, this._props && this._props.data ? this._props.data.Heading : null),
+                description: new CmsField("Description", CmsFieldTypes.WYSIWYG, this._props && this._props.data ? this._props.data.Description : null),
+                button_text: new CmsField("Button_Text", CmsFieldTypes.TEXT, this._props && this._props.data ? this._props.data.Button_Text : null)
             }
         }
     };
