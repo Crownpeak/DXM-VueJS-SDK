@@ -1,6 +1,5 @@
 <a href="https://www.crownpeak.com" target="_blank">![Crownpeak Logo](images/crownpeak-logo.png?raw=true "Crownpeak Logo")</a>
 
-
 # Crownpeak Digital Experience Management (DXM) Software Development Kit (SDK) for Vue.js
 Crownpeak Digital Experience Management (DXM) Software Development Kit (SDK) for Vue.js has been constructed to assist
 the Single Page App developer in developing client-side applications that leverage DXM for content management purposes.
@@ -46,7 +45,7 @@ npm install crownpeak-dxm-vuejs-sdk
 ```
 
 ## Usage - Runtime Data Libraries
- Review example project at <a href="https://github.com/Crownpeak/DXM-VueJS-SDK/tree/master/examples/bootstrap-blog" target="_blank">https://github.com/Crownpeak/DXM-VueJS-SDK/tree/master/examples/bootstrap-blog</a>
+ Review example project at <a href="https://github.com/Crownpeak/DXM-SDK-Examples/tree/master/Vue.js" target="_blank">https://github.com/Crownpeak/DXM-SDK-Examples/tree/master/Vue.js</a>
  for complete usage options. The example project includes the following capabilities:
   * Routing using ```Vue-Router``` and JSON payload, delivered from DXM to map AssetId to requested path. Although
   not part of the SDK itself, the example can be used if desired. For routes.json structure, see example at the foot of this README.
@@ -56,7 +55,7 @@ npm install crownpeak-dxm-vuejs-sdk
 
 ### CmsStaticPage Type
 Loads payload data from JSON file on filesystem - expects knowledge of DXM AssetId in order to find file with corresponding
-name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset when used as a page. Example at /examples/bootstrap-blog/pages/blogPage.vue:
+name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset when used as a page.
 ```
 <template>
     <div>
@@ -119,7 +118,7 @@ name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset whe
 ```
 
 ### CmsDynamicPage Type
-Loads payload data from DXM Dynamic Content API upon request - expects knowledge of DXM AssetId. Example at /examples/bootstrap-blog/pages/blogPage.vue:
+Loads payload data from DXM Dynamic Content API upon request - expects knowledge of DXM AssetId.
  ```
 <template>
     <div>
@@ -182,7 +181,7 @@ Loads payload data from DXM Dynamic Content API upon request - expects knowledge
 ```
 
 ### CmsComponent
-Includes CmsField references for content rendering from DXM within a Vue.js Component. Example at /examples/bootstrap-blog/components/blogPost.vue:
+Includes CmsField references for content rendering from DXM within a Vue.js Component.
 ```
 <template>
     <div class="blog-post">
@@ -252,7 +251,7 @@ Enumeration containing field types supported within the SDK.
 
 
 ### Querying Custom Data from Dynamic Content API
-Used to run a one-time dynamic query from DXM's Dynamic Content API. Example at /examples/bootstrap-blog/components/postArchives.vue:
+Used to run a one-time dynamic query from DXM's Dynamic Content API.
 ```
 <template>
     <div class="p-3">
@@ -281,7 +280,7 @@ Used to run a one-time dynamic query from DXM's Dynamic Content API. Example at 
 ```
 
 ### Using Custom Data from Named JSON Object on Filesystem
-Used to load content from a JSON Object on Filesystem and populate fields in CmsComponent. Example at /examples/bootstrap-blog/components/topicList.vue:
+Used to load content from a JSON Object on Filesystem and populate fields in CmsComponent.
 ```
 <template>
     <div class="nav-scroller py-1 mb-2">
