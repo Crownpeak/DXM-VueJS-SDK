@@ -232,6 +232,35 @@ Enables implementation of draggable components via DXM. Example usage below:
 </script>
 ```
 
+### List Items
+Enables implementation of list items within DXM. Example usage below (note comment, which is requirement for DXM scaffolding):
+```
+<template>
+    <div class="row">
+        <!-- <List name="SecondaryContainers" type="Widget" itemName="_Widget"> -->
+        <SecondaryContainer v-for="(sc, i) in secondaryContainers.value" :key="i" v-bind:data="sc.SecondaryContainer" />
+        <!-- </List> -->
+    </div>
+</template>
+<script>
+    import { CmsComponent, CmsField, CmsFieldTypes } from 'crownpeak-dxm-vuejs-sdk';
+    import SecondaryContainer from './secondaryContainer';
+    export default {
+        extends: CmsComponent,
+        name: "SecondaryList",
+        props: ['data'],
+        data() {
+            return {
+                secondaryContainers: new CmsField("SecondaryContainer", "SecondaryContainer", window.cmsDataCache[window.cmsDataCache.cmsAssetId].SecondaryList)
+            }
+        },
+        components: {
+            SecondaryContainer
+        }
+    };
+</script>
+```
+
 Example implementation upon a ```CmsStaticPage``` or ```CmsDynamicPage```:
 ```
 <DropZone name="Test"/>
