@@ -5,6 +5,11 @@ const fs = require("fs");
 const _args = process.argv.slice(2);
 
 const main = () => {
+    if (_args.findIndex(a => a.toLowerCase() === "--help") > -1
+        || _args.findIndex(a => a.toLowerCase() === "-h") > -1) {
+        return showHelp();
+    }
+
     const cwd = process.env.INIT_CWD || require('path').resolve('.');
     let config = process.env;
     // Merge in any environment changes they provided
@@ -73,6 +78,36 @@ const main = () => {
         .then(() => noPages ? noop : cms.saveTemplates(pages, wrappers.length > 0 ? wrappers[0].name : ""))
         ;
     }
+};
+
+const showHelp = () => {
+    const isYarn = typeof(process.env["YARN_WRAP_OUTPUT"]) !== "undefined";
+    const isNpx = typeof(process.env["NPX_CLI_JS"]) !== "undefined";
+    const proc = isYarn ? "yarn" : "npx";
+    process.stdout.write("To assist the Single Page App developer in developing client-side applications that leverage DXM for content management purposes.\n\n");
+    process.stdout.write(proc + " crownpeak [--dry-run] [--ignore-circular-dependencies] [--no-components] [--no-pages] [--no-pages] [--no-uploads]\n\n");
+    process.stdout.write("Arguments\n");
+    process.stdout.write("---------\n");
+    process.stdout.write("--dry-run                      - Show what would be created/updated inside the DXM platform if --dry-run were not specified.\n");
+    process.stdout.write("--ignore-circular-dependencies - Instruct the tool to ignore unmet/circular dependency checking before import.\n");
+    process.stdout.write("                                 Errors may be shown when the tool is run if dependencies do not exist within DXM.\n");
+    process.stdout.write("--no-components                - Instruct the tool to not create/update components within the DXM platform.\n");
+    process.stdout.write("--no-pages                     - Instruct the tool to not create/update templates, models or pages within the DXM platform.\n");
+    process.stdout.write("--no-wrappers                  - Instruct the tool to not create/update wrappers within the DXM platform.\n");
+    process.stdout.write("--no-uploads                   - Instruct the tool to not create/update uploads within the DXM platform.\n");
+    process.stdout.write("\n");
+    process.stdout.write("A number of environment variables are expected when running this tool. These can be set directly or provided via a .env file.\n\n");
+    process.stdout.write("Environment variables\n");
+    process.stdout.write("---------------------\n");
+    process.stdout.write("CMS_INSTANCE                 - The CMS instance name to use.\n");
+    process.stdout.write("CMS_USERNAME                 - The username to access the selected CMS instance.\n");
+    process.stdout.write("CMS_PASSWORD                 - The password to access the selected CMS instance.\n");
+    process.stdout.write("CMS_API_KEY                  - The developer key to use with the CMS Access API.\n");
+    process.stdout.write("CMS_SITE_ROOT                - The asset id of the site root in which content items should be created.\n");
+    process.stdout.write("CMS_PROJECT                  - The asset id of the project in which code items should be created.\n");
+    process.stdout.write("CMS_WORKFLOW                 - The id of the workflow with which content items should be associated.\n");
+    process.stdout.write("CMS_STATIC_CONTENT_LOCATION  - The folder in your project where static JSON files can be found.\n");
+    process.stdout.write("CMS_DYNAMIC_CONTENT_LOCATION - A Search G2 query prefix that can be used to locate dynamic content.\n");
 };
 
 const reorderComponents = (components) => {
