@@ -141,8 +141,9 @@ const createOrUpdateComponent = async (className, markup, deferCompilation = fal
 
 const processComponents = async (components) => {
     for (let i in components) {
+        const last = parseInt(i) === components.length - 1;
         const component = components[i];
-        const result = await createOrUpdateComponent(component.name, component.content, true);
+        const result = await createOrUpdateComponent(component.name, component.content, !last);
         component.assetId = result.asset.id;
         component.assetPath = await getPath(component.assetId);
         console.log(`Saved component [${component.name}] as [${component.assetPath}] (${component.assetId})`);
