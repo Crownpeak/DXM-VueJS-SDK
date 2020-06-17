@@ -4,6 +4,9 @@ let _componentName = "";
 
 const reTemplate = /<template>\s*((?:.|\r|\n)+)\s*<\/template>/i;
 const reScript = /<script>\s*((?:.|\r|\n)+)\s*<\/script>/i;
+const reList = /^([ \t]*)<!--\s*<List(.*?)\s*type=(["'])([^"']+?)\3(.*?)>\s*-->((.|\s)*?)<!--\s*<\/List>\s*-->/im;
+const reListName = /\s+?name\s*=\s*(["'])([^"']+?)\1/i;
+const reListItemName = /\s+?itemName\s*=\s*(["'])([^"']+?)\1/i;
 
 const parse = (content) => {
     let match = reTemplate.exec(content);
@@ -40,7 +43,14 @@ const parse = (content) => {
                 }
             }
         }
-        else if (part.type === "ExportDefaultDeclaration") {
+    }
+
+    // Parse out any special lists
+    template = replaceLists(template);
+
+    for (let i = 0, len = bodyParts.length; i < len; i++) {
+        const part = bodyParts[i];
+        if (part.type === "ExportDefaultDeclaration") {
             const extnds = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "extends");
             let name = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "name");
             if (extnds && extnds.value.name === "CmsComponent" && name) {
@@ -66,6 +76,35 @@ const finalProcessMarkup = (content) => {
         content = content.replace(replacer, "$1");
     }
     return trimSharedLeadingWhitespace(content);
+};
+
+const replaceLists = (content) => {
+    let match;
+    while (match = reList.exec(content)) {
+        let attributes = " " + match[2] + " " + match[5];
+        let name = "";
+        let itemName = "";
+        const ws = match[1];
+        const type = match[4];
+        if (reListName.test(attributes)) {
+            const nameMatch = reListName.exec(attributes);
+            name = nameMatch[2];
+        }
+        if (reListItemName.test(attributes)) {
+            const nameMatch = reListItemName.exec(attributes);
+            itemName = nameMatch[2];
+        }
+        if (!name) {
+            name = type + "s"; // TODO: better way to make plural
+        }
+        if (!itemName) {
+            itemName = type;
+        }
+        //console.log(`Found list with name ${name}`);
+        const repl = `${ws}<cp-list name="${name}">\r\n${ws}  {${itemName}:${type}}\r\n${ws}</cp-list>`;
+        content = content.replace(match[0], repl);
+    }
+    return content;
 };
 
 const trimSharedLeadingWhitespace = (content) => {
