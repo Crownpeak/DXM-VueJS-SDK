@@ -94,12 +94,13 @@ const reorderComponents = (components) => {
     }
     if (!workingSet.length) return result;
 
-    if (_args.findIndex(a => a.toLowerCase() === "--ignorecirculardependencies") > -1) {
+    if (_args.findIndex(a => a.toLowerCase() === "--ignorecirculardependencies") > -1
+        || _args.findIndex(a => a.toLowerCase() === "--ignore-circular-dependencies") > -1) {
         console.warn(`CMSIFY: Warning: circular dependencies found and ignored.`);
         return result.concat(workingSet);
     }
 
-    console.error(`CMSIFY: Error: circular dependencies found. Please resolve these before importing, or set the --ignoreCircularDependencies argument.`);
+    console.error(`CMSIFY: Error: circular dependencies found. Please resolve these before importing, or set the --ignore-circular-dependencies argument.`);
     process.exit(1);
 };
 
