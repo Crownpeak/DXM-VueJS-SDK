@@ -243,7 +243,7 @@ Enables implementation of list items within DXM. Example usage below (note comme
     </div>
 </template>
 <script>
-    import { CmsComponent, CmsField, CmsFieldTypes } from 'crownpeak-dxm-vuejs-sdk';
+    import { CmsComponent, CmsField, CmsFieldTypes, CmsDataCache } from 'crownpeak-dxm-vuejs-sdk';
     import SecondaryContainer from './secondaryContainer';
     export default {
         extends: CmsComponent,
@@ -251,7 +251,7 @@ Enables implementation of list items within DXM. Example usage below (note comme
         props: ['data'],
         data() {
             return {
-                secondaryContainers: new CmsField("SecondaryContainer", "SecondaryContainer", window.cmsDataCache[window.cmsDataCache.cmsAssetId].SecondaryList)
+                secondaryContainers: new CmsField("SecondaryContainer", "SecondaryContainer", CmsDataCache.get(CmsDataCache.cmsAssetId).SecondaryList)
             }
         },
         components: {
