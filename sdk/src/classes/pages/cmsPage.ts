@@ -9,6 +9,7 @@ export default class CmsPage extends Vue {
     cmsDataProvider?: ICmsDataProvider;
     cmsAssetId: number = -1;
     $cmsAssetId: number = -1;
+    cmsWrapper?: string;
 
     created (): void {
         if (this.$router && this.$route) {
