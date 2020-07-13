@@ -20,7 +20,7 @@ const main = () => {
     // Check we have everything we need to work
     if (!validateInput(config)) return;
 
-    const cms = require("./cms");
+    const cms = require("crownpeak-dxm-sdk-core/lib/crownpeak/cms");
     cms.init(config);
 
     const parser = require("../parsers/parser");
@@ -69,9 +69,12 @@ const main = () => {
         noPages ? noop : console.log(`Pages: ${pages.map(p => p.name)}`);
         noWrappers ? noop : console.log(`Wrappers: ${wrappers.map(w => w.name)}`);
         noUploads ? noop : console.log(`Uploads: ${uploads.map(u => u.name)}`);
-    } else {
+    } else if (_args.findIndex(a => a.toLowerCase() === "--verify") > -1) {
         cms.login()
         .then(() => cms.verifyEnvironment())
+        ;
+    } else {
+        cms.login()
         .then(() => noUploads ? noop : cms.saveUploads(uploads))
         .then(() => noWrappers ? noop : cms.saveWrappers(wrappers))
         .then(() => noComponents ? noop : cms.saveComponents(components))
@@ -85,10 +88,11 @@ const showHelp = () => {
     const isNpx = typeof(process.env["NPX_CLI_JS"]) !== "undefined";
     const proc = isYarn ? "yarn" : "npx";
     process.stdout.write("To assist the Single Page App developer in developing client-side applications that leverage DXM for content management purposes.\n\n");
-    process.stdout.write(proc + " crownpeak [--dry-run] [--ignore-circular-dependencies] [--no-components] [--no-pages] [--no-pages] [--no-uploads]\n\n");
+    process.stdout.write(proc + " crownpeak [--dry-run] [--verify] [--ignore-circular-dependencies] [--no-components] [--no-pages] [--no-pages] [--no-uploads]\n\n");
     process.stdout.write("Arguments\n");
     process.stdout.write("---------\n");
     process.stdout.write("--dry-run                      - Show what would be created/updated inside the DXM platform if --dry-run were not specified.\n");
+    process.stdout.write("--verify                       - Verify that the Crownpeak DXM environment is configurated correctly.\n");
     process.stdout.write("--ignore-circular-dependencies - Instruct the tool to ignore unmet/circular dependency checking before import.\n");
     process.stdout.write("                                 Errors may be shown when the tool is run if dependencies do not exist within DXM.\n");
     process.stdout.write("--no-components                - Instruct the tool to not create/update components within the DXM platform.\n");
