@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require('path');
 
 // TODO: imports
-const reUrl = /url\s*\(\s*([^)]*)\s*\)/ig;
+const reUrl = /url\s*\(\s*((["']?)([^)]*)\2)\s*\)/ig;
 const reContent = /content\s*:\s*\s*(["'])(.)\1/ig;
 
 const parse = (file, content, folderRoot) => {
@@ -17,7 +17,7 @@ const replaceUrls = (file, content, folderRoot) => {
     var matches;
     while (matches = reUrl.exec(content)) {
         if (matches && matches.length > 1) {
-            let url = matches[1];
+            let url = matches[3];
             if (url.indexOf("http") < 0 && url.indexOf("//") < 0) {
                 //console.log(`Found url candidate ${url}`);
                 if (url.indexOf("?") >= 0) url = url.substr(0, url.indexOf("?"));
