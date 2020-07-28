@@ -274,9 +274,10 @@ Enumeration containing field types supported within the SDK.
 | ------------- | --------------- |
 | TEXT          | Text            |
 | WYSIWYG       | Wysiwyg         |
-| DATE          | DateTime        |
+| DATE          | Date            |
 | DOCUMENT      | Document        |
-| IMAGE         | Image           |
+| IMAGE         | Src             |
+| HREF          | Href            |
 
 
 ### Querying Custom Data from Dynamic Content API
@@ -333,14 +334,10 @@ Used to load content from a JSON Object on Filesystem and populate fields in Cms
 ```
 
 ## Usage - DXM Content-Type Scaffolding (cmsify)
-Requires manual update to DXM Component Library, by installing <a href="https://raw.githubusercontent.com/Crownpeak/DXM-SDK-Core/master/dxm/dxm-cl-patch-for-react-sdk-2020JUN16.xml" target="_blank">dxm-cl-patch-for-React-sdk-2020JUN16.xml</a>
-using Crownpeak DXM Content Xcelerator℠ (<a href="https://github.com/Crownpeak/Content-Xcelerator" target="_blank">https://github.com/Crownpeak/Content-Xcelerator</a>).
+## Installation - DXM Content-Type Scaffolding (cmsify)
+* Requires update to DXM Component Library, by installing <a href="https://raw.githubusercontent.com/Crownpeak/DXM-SDK-Core/master/dxm/dxm-cl-patch-for-react-sdk-2020JUL28.xml" target="_blank">dxm-cl-patch-for-React-sdk-2020JUL28.xml</a>.
 
-Installation instructions:
- * Create new DXM Site Root and check "Install Component Project using Component Library 2.1";
- * Use Crownpeak DXM Content Xcelerator℠ to install manifest (detailed above) to Site Root with "Overwrite Existing Assets" option checked.
-
-Requires .env file located in root of the Vue.js project to be scaffolded. Values required within .env file are:
+* Requires .env file located in root of the Vue.js project to be scaffolded. Values required within .env file are:
  
 | Key           | Description                                                               |
 | ------------- | ------------------------------------------------------------------------- |
@@ -366,12 +363,31 @@ CMS_STATIC_CONTENT_LOCATION=/content/json
 CMS_DYNAMIC_CONTENT_LOCATION=//searchg2.crownpeak.net/{Replace with Search G2 Collection Name}/select/?wt=json
 ```
 
-From the root of the project to be Vue.js scaffolded:
+Installation instructions:
+1. Create new DXM Site Root and check "Install Component Project using Component Library 2.2"; or
+```
+$ yarn crownpeak init --folder <parent-folder-id> --name "New Site Name"
+```
+
+2. After site creation, set the values for `CMS_SITE_ROOT` and `CMS_PROJECT` in your `.env` file to be the
+relevant asset IDs from DXM;
+
+3. Install the manifest (detailed above);
+```
+$ yarn crownpeak patch
+```
+
+4. Verify that all your settings are correct.
+```
+$ yarn crownpeak scaffold --verify
+```
+
+## Usage - DXM Content-Type Scaffolding
 
 ```
-$ yarn crownpeak
-yarn run v1.22.0
-$ ../../sdk/cmsify
+$ yarn crownpeak scaffold
+yarn run v1.22.4
+$ ../../sdk/cmsify scaffold
 Uploaded [holder.min.js] as [/Skunks Works/Vue.js SDK/_Assets/js/holder.min.js] (261402)
 Unable to find source file [/Users/paul.taylor/Documents/Repos/Crownpeak/DXM-Vue.js-SDK/examples/bootstrap/js/bundle.js] for upload
 Uploaded [blog.css] as [/Skunks Works/Vue.js SDK/_Assets/css/blog.css] (261400)
@@ -392,11 +408,13 @@ Saved content folder [Blog Pages] as [/Skunks Works/Vue.js SDK/Blog Pages/] (261
 The scaffolding can be run multiple times as additional capabilities are added to the Vue.js project. Asset data within DXM will not
 be destroyed by future runs.
 
-The `crownpeak` script supports a number of optional command-line parameters:
+The `crownpeak scaffold` script supports a number of optional command-line parameters:
 
 | Parameter        | Effect        |
 | ---------------- | --------------|
 | `--dry-run`      | Report on the items that would be imported into the CMS, but do not import them. |
+| `--verbose`      | Show verbose output where applicable. |
+| `--verify`       | Verify that the Crownpeak DXM environment is configured correctly. |
 | `--nocomponents` | Do not import any components. |
 | `--nopages`      | Do not import any pages, templates, or models. |
 | `--nouploads`    | Do not import any uploads; for example CSS, JavaScript or images. |
