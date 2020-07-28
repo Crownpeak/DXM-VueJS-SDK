@@ -47,4 +47,4 @@ Data Sources**
 | 1.0.3         | 2020JUN10     | Drag & Drop support. Verify environment before scaffold. Manual re-compilation of Component Library. Bug fixes.    |
 | 1.0.4         | 2020JUN17     | Support for list items. Bug fixes.    |
 | 2.0.1         | 2020JUN30     | Migrated to TypeScript.   |
-| next          | 2020JUL28     | New 'init', 'patch' and 'scaffold' options, improved output, lots of bug fixes. |
+| 2.1.0         | 2020JUL28     | New 'init', 'patch' and 'scaffold' options, improved output, lots of bug fixes. |
