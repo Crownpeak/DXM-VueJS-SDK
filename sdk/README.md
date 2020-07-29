@@ -48,3 +48,4 @@ Data Sources**
 | 1.0.4         | 2020JUN17     | Support for list items. Bug fixes.    |
 | 2.0.1         | 2020JUN30     | Migrated to TypeScript.   |
 | 2.1.0         | 2020JUL28     | New 'init', 'patch' and 'scaffold' options, improved output, lots of bug fixes. |
+| 2.1.1         | 2020JUL29     | Updated crownpeak-dxm-sdk-core version.    |

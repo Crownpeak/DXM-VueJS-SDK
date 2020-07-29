@@ -252,10 +252,10 @@ core-util-is@1.0.2:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-crownpeak-dxm-accessapi-helper@^1.0.2:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-accessapi-helper/-/crownpeak-dxm-accessapi-helper-1.0.3.tgz#26f75c6bf167b549adc41bf5a67e980e0ba909ee"
-  integrity sha512-ft563zEeRxhZW4L+KaOEF7JHs+rlZ2Nzudkyw3Nx5OqFg631LwHc3rgtMCsGIdnX3jNc50gMAmjD//3FslCH6A==
+crownpeak-dxm-accessapi-helper@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-accessapi-helper/-/crownpeak-dxm-accessapi-helper-1.0.4.tgz#5aa5cc9c29c4023a5a0025a840b353228314495e"
+  integrity sha512-62yC9zkAQfZhpUHSpIQdkNJDYLwT1vH1rMuN/W569gEL+rpqA0lVtySZNFKWWQIh2+k47Gd5lJDKeZEFksAfPQ==
   dependencies:
     istextorbinary "^2.5.1"
     mocha "^7.1.2"
@@ -264,12 +264,14 @@ crownpeak-dxm-accessapi-helper@^1.0.2:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
-crownpeak-dxm-sdk-core@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-2.0.0.tgz#83343d8432d675e695fbc1427c101d036dcde755"
-  integrity sha512-996iFpnZn7fuY7VlDSNAb0ZjQZWX3g66bevlCKBsWMr/LXgtD5i952Exb21kdj51c2Lic+flScn5xOlJmAty2g==
+crownpeak-dxm-sdk-core@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-2.1.1.tgz#cabc56b740b4d2577f4b2d28bfb755f349b39c2a"
+  integrity sha512-hQTh6TrM8StVprnI/Nbpal5Gw+pLBpkFnnbTNyF3OmYUuBG5ay5yzFU3ePagPqz219VLiFXiKYo4iXALCuq7kA==
   dependencies:
-    crownpeak-dxm-accessapi-helper "^1.0.2"
+    crownpeak-dxm-accessapi-helper "^1.0.4"
+    minimist "^1.2.5"
+    xml2js "^0.4.23"
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -998,6 +1000,11 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sax@>=0.6.0:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
+  integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
+
 semver@^5.3.0, semver@^5.7.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
@@ -1245,6 +1252,19 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+xml2js@^0.4.23:
+  version "0.4.23"
+  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.23.tgz#a0c69516752421eb2ac758ee4d4ccf58843eac66"
+  integrity sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==
+  dependencies:
+    sax ">=0.6.0"
+    xmlbuilder "~11.0.0"
+
+xmlbuilder@~11.0.0:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
+  integrity sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==
 
 y18n@^4.0.0:
   version "4.0.0"
