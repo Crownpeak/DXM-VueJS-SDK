@@ -136,6 +136,7 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
         { source: "{{.*?\\/\\*.*?%%name%%.*?\\*\\/.*?}}", replacement: "<!-- {%%fieldname%%:%%fieldtype%%} -->" },
         { source: "{{.*?%%name%%.*?}}", replacement: "{%%fieldname%%:%%fieldtype%%}" },
         { source: "<([a-z0-9:-]*)(\\s*.*?)\\s+v-html\\s*=\\s*([\"'])(%%name%%)\\3([^>]*?)(><\\/\\1>|\\/>)", replacement: "<$1$2$5>{%%fieldname%%:%%fieldtype%%}</$1>" },
+        { source: "(\\s+):([A-Za-z0-9]+)\s*=\s*([\"']?)%%name%%\\3", replacement: "$1$2=\"{%%fieldname%%:%%fieldtype%%}\"" }
     ];
     const componentRegexs = [
         { source: "<(%%name%%)([^>]*?)(>.*?<\\/\\1>|\\/>)", replacement: "{%%name%%:%%componentname%%}" }
