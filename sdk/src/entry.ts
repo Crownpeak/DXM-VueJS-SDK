@@ -3,4 +3,4 @@ export { default as CmsStaticPage } from "./classes/pages/cmsStaticPage";
 export { default as CmsComponent } from "./classes/components/cmsComponent";
 export { default as CmsDropZoneComponent } from "./classes/components/cmsDropzoneComponent";
 export { default as CmsCore } from "./classes/common/cmsCore";
-export { CmsField, CmsFieldTypes, CmsDynamicDataProvider, CmsStaticDataProvider, CmsDataCache } from "crownpeak-dxm-sdk-core";
+export { CmsField, CmsFieldTypes, CmsIndexedField, CmsDynamicDataProvider, CmsStaticDataProvider, CmsDataCache } from "crownpeak-dxm-sdk-core";

@@ -147,11 +147,13 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
     for (let i = 0, len = dataItems.length; i < len; i++) {
         //console.log(`Looking for ${data[i].name}`);
         if (data[i].fieldName) {
+            let indexedField = cmsIndexedFieldToString(data[i].indexedField);
+            if (indexedField) indexedField = ":" + indexedField;
             for (let j = 0, lenJ = fieldRegexs.length; j < lenJ; j++) {
                 let regex = new RegExp(fieldRegexs[j].source.replace("%%name%%", data[i].name));
                 let match = regex.exec(result);
                 if (match) {
-                    const replacement = fieldRegexs[j].replacement.replace("%%fieldname%%", data[i].fieldName).replace("%%fieldtype%%", data[i].fieldType);
+                    const replacement = fieldRegexs[j].replacement.replace("%%fieldname%%", data[i].fieldName).replace("%%fieldtype%%", data[i].fieldType + indexedField);
                     //console.log(`Replacing [${match[0]}] with [${replacement}]`);
                     result = result.replace(regex, replacement);
                 }
@@ -187,21 +189,43 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
             if (prop.value && prop.value.callee && prop.value.callee.name === "CmsField" && prop.value.arguments && prop.value.arguments.length > 1) {
                 const args = prop.value.arguments;
                 if (args[1].property && args[1].property.name) {
-                    // Items of the form CmsField("Heading", CmsFieldTypes.TEXT)
-                    //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].property.name}]`);
-                    results.push({
-                        name: prop.key.name,
-                        fieldName: args[0].value,
-                        fieldType: cmsFieldTypeToString(args[1].property.name)
-                    });
+                    if (args.length > 3 && args[3].object && args[3].object.type === "Identifier" && args[3].object.name === "CmsIndexedField") {
+                        // Items of the form CmsField("Heading", CmsFieldTypes.TEXT, something, CmsIndexedField.TYPE)
+                        //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}], type [${args[1].property.name}] and indexedField [$(args[3].property.name)]`);
+                        results.push({
+                            name: prop.key.name,
+                            fieldName: args[0].value,
+                            fieldType: cmsFieldTypeToString(args[1].property.name),
+                            indexedField: args[3].property.name
+                        });
+                    } else {
+                        // Items of the form CmsField("Heading", CmsFieldTypes.TEXT)
+                        //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].property.name}]`);
+                        results.push({
+                            name: prop.key.name,
+                            fieldName: args[0].value,
+                            fieldType: cmsFieldTypeToString(args[1].property.name)
+                        });
+                    }
                 } else if (args[1].type === "StringLiteral" && args[1].value) {
-                    // Items of the form CmsField("Heading", "FieldType")
-                    //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].value}]`);
-                    results.push({
-                        name: prop.key.name,
-                        fieldName: args[0].value,
-                        fieldType: cmsFieldTypeToString(args[1].value)
-                    });
+                    if (args.length > 3 && args[3].object && args[3].object.type === "Identifier" && args[3].object.name === "CmsIndexedField") {
+                        // Items of the form CmsField("Heading", "FieldType", something, CmsIndexedField.TYPE)
+                        //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}], type [${args[1].value}] and indexedField [$(args[3].property.name)]`);
+                        results.push({
+                            name: prop.key.name,
+                            fieldName: args[0].value,
+                            fieldType: cmsFieldTypeToString(args[1].value),
+                            indexedField: args[3].property.name
+                        });
+                    } else {
+                        // Items of the form CmsField("Heading", "FieldType")
+                        //console.log(`Found property [${prop.key.name}] with field name [${args[0].value}] of type [${args[1].value}]`);
+                        results.push({
+                            name: prop.key.name,
+                            fieldName: args[0].value,
+                            fieldType: cmsFieldTypeToString(args[1].value)
+                        });
+                    }
                 }
             }
         }
@@ -230,6 +254,16 @@ const cmsFieldTypeToString = (cmsFieldType) => {
         return cmsFieldType[0] + cmsFieldType.substr(1).toLowerCase();
     }
     return cmsFieldType;
+};
+
+const cmsIndexedFieldToString = (cmsIndexedField) => {
+    if (!cmsIndexedField || cmsIndexedField === "NONE") return "";
+    if (cmsIndexedField === "DATETIME") return "IndexedDateTime";
+    if (cmsIndexedField === cmsIndexedField.toUpperCase()) {
+        // TODO: robusify this!
+        return "Indexed" + cmsIndexedField[0] + cmsIndexedField.substr(1).toLowerCase();
+    }
+    return "Indexed" + cmsIndexedField;
 };
 
 module.exports = {
