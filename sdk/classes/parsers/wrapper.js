@@ -39,7 +39,7 @@ const replaceScripts = (file, content) => {
     const folder = path.dirname(file);
     var matches;
     while (matches = regex.exec(content)) {
-        if (matches && matches.length > 2) {
+        if (matches && matches.length > 2 && matches[2]) {
             if (matches[2].indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
                 //console.log(`Found script candidate ${matches[2]}`);
                 const filename = path.basename(matches[2]);
@@ -63,7 +63,7 @@ const replaceLinks = (file, content) => {
     const folder = path.dirname(file);
     var matches;
     while (matches = regex.exec(content)) {
-        if (matches && matches.length > 2) {
+        if (matches && matches.length > 2 && matches[2]) {
             if (matches[2].indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
                 //console.log(`Found link candidate ${matches[2]}`);
                 const filename = path.basename(matches[2]);
@@ -73,7 +73,7 @@ const replaceLinks = (file, content) => {
                 result = result.replace(matches[2], replacement)
 
                 const filepath = path.join(folder, matches[2]);
-                if (fs.existsSync(filepath)) {
+                if (fs.existsSync(filepath) && fs.lstatSync(filepath).isFile()) {
                     const result = cssParser.parse(filepath, fs.readFileSync(filepath, "utf8"), folder);
                     if (result.content && result.uploads && result.uploads.length) {
                         uploads.push({source: filepath, name: filename, destination: "_Assets/css/", content: result.content});
