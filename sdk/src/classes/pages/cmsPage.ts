@@ -12,7 +12,7 @@ export default class CmsPage extends Vue {
     cmsWrapper?: string;
 
     created (): void {
-        if (this.$router && this.$route) {
+        if (!this.$cmsAssetId && this.$router && this.$route) {
             const router = this.$router as ICmsRouter;
             if (router && router.options && router.options.routes)
                 this.$cmsAssetId = ((router.options.routes.find(r => r.path === this.$route.path) || {}) as ICmsRouteConfigSingleView).cmsassetid || -1;
