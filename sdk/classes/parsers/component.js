@@ -136,7 +136,7 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
         { source: "{{.*?\\/\\*.*?%%name%%.*?\\*\\/.*?}}", replacement: "<!-- {%%fieldname%%:%%fieldtype%%} -->" },
         { source: "{{.*?%%name%%.*?}}", replacement: "{%%fieldname%%:%%fieldtype%%}" },
         { source: "<([a-z0-9:-]*)(\\s*.*?)\\s+v-html\\s*=\\s*([\"'])(%%name%%)\\3([^>]*?)(><\\/\\1>|\\/>)", replacement: "<$1$2$5>{%%fieldname%%:%%fieldtype%%}</$1>" },
-        { source: "(\\s+):([A-Za-z0-9]+)\s*=\s*([\"']?)%%name%%\\3", replacement: "$1$2=\"{%%fieldname%%:%%fieldtype%%}\"" }
+        { source: "(\\s+)(?:v-bind)?:([A-Za-z0-9]+)\s*=\s*([\"']?)%%name%%\\3", replacement: "$1$2=\"{%%fieldname%%:%%fieldtype%%}\"" }
     ];
     const componentRegexs = [
         { source: "<(%%name%%)([^>]*?)(>.*?<\\/\\1>|\\/>)", replacement: "{%%name%%:%%componentname%%}" }
@@ -152,10 +152,11 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
             for (let j = 0, lenJ = fieldRegexs.length; j < lenJ; j++) {
                 let regex = new RegExp(fieldRegexs[j].source.replace("%%name%%", data[i].name));
                 let match = regex.exec(result);
-                if (match) {
+                while (match) {
                     const replacement = fieldRegexs[j].replacement.replace("%%fieldname%%", data[i].fieldName).replace("%%fieldtype%%", data[i].fieldType + indexedField);
                     //console.log(`Replacing [${match[0]}] with [${replacement}]`);
                     result = result.replace(regex, replacement);
+                    match = regex.exec(result);
                 }
             }
         } else if (data[i].componentName) {
