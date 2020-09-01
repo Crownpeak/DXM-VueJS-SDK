@@ -11,7 +11,7 @@ const process = (file) => {
     let content = fs.readFileSync(file, "utf8");
     if (!content) {
         console.log(`Skipping empty file ${file}`);
-        return;
+        return {};
     }
 
     let components = [], pages = [], wrapper = null, uploads = [];
