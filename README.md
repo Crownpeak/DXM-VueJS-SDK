@@ -231,6 +231,11 @@ Enables implementation of draggable components via DXM. Example usage below:
     };
 </script>
 ```
+Example implementation upon a ```CmsStaticPage``` or ```CmsDynamicPage```:
+```
+<DropZone name="Test"/>
+```
+For further details, see examples/bootstrap-homepage project.
 
 ### List Items
 Enables implementation of list items within DXM. Example usage below (note comment, which is requirement for DXM scaffolding):
@@ -261,11 +266,21 @@ Enables implementation of list items within DXM. Example usage below (note comme
 </script>
 ```
 
-Example implementation upon a ```CmsStaticPage``` or ```CmsDynamicPage```:
+### More Complex Replacements
+If your application code is too complex for the parser to be able to extract your fields, it is possible to provide your own markup for the Component Library to use instead of your component code:
 ```
-<DropZone name="Test"/>
+{/* cp-scaffold 
+<h2>{Heading:Text}</h2>
+else */}
+<h2>{ this.heading.value.length > MAX_LENGTH ? this.heading.value.substr(0, MAX_LENGTH) + "..." : this.heading }</h2>
+{/* /cp-scaffold */}
 ```
-For further details, see examples/bootstrap-homepage project.
+It is also possible to add extra markup that is not used directly in your application, for example to support extra data capture:
+```
+{/* cp-scaffold 
+{SupplementaryField:Text}
+/cp-scaffold */}
+```
 
 ### CmsFieldType
 Enumeration containing field types supported within the SDK.
@@ -279,6 +294,25 @@ Enumeration containing field types supported within the SDK.
 | IMAGE         | Src             |
 | HREF          | Href            |
 
+### Indexed Fields
+Enables fields to be extracted from content and published as separate fields into Search G2, to support easier sorting and filtering:
+```
+title: new CmsField("Title", CmsFieldTypes.TEXT, null, CmsIndexedField.STRING),
+```
+A number of different values are available in the `CmsIndexedField` enumerated type to support different data types:
+| Enum value | Search G2 Prefix | Comment |
+| ---------- | ---------------- | ------- |
+| STRING     | custom_s_        | String, exact match only.
+| TEXT       | custom_t_        | Text, substring matches allowed, tokenised so not usefully sortable.
+| DATETIME   | custom_dt_       | DateTime, must be ISO-8601.
+| INTEGER    | custom_i_        | 32-bit signed integer, must be valid.
+| LONG       | custom_l_        | 64-bit signed integer, must be valid.
+| FLOAT      | custom_f_        | 32-bit IEEE floading point, must be valid.
+| DOUBLE     | custom_d_        | 64-bit IEEE floating point, must be valid.
+| BOOLEAN    | custom_b_        | Boolean, must be true or false.
+| LOCATION   | custom_p_        | Point, must be valid _lat,lon_.
+| CURRENCY   | custom_c_        | Currency, supporting exchange rates.
+If an invalid value for the specific data type is sent to Search G2, the entire statement is liable to fail silently.
 
 ### Querying Custom Data from Dynamic Content API
 Used to run a one-time dynamic query from DXM's Dynamic Content API.
