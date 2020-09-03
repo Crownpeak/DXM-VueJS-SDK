@@ -133,8 +133,8 @@ const trimSharedLeadingWhitespace = (content) => {
 
 const processCmsComponentTemplate = (content, name, template, data, imports, dependencies) => {
     const scaffoldRegexs = [
-        { source: "<!--\\s*cp-scaffold\\s*(.*?)\\s*else\\s*-->\\s*(.*?)\\s*<!--\\s*\\/cp-scaffold\\s*-->", replacement: "$1"},
-        { source: "<!--\\s*cp-scaffold\\s*(.*?)\\s*\\/cp-scaffold\\s*-->", replacement: "$1"}
+        { source: "<!--\\s*cp-scaffold\\s*((?:.|\\r|\\n)*?)\\s*else\\s*-->\\s*((?:.|\\r|\\n)*?)\\s*<!--\\s*\\/cp-scaffold\\s*-->", replacement: "$1" },
+        { source: "<!--\\s*cp-scaffold\\s*((?:.|\\r|\\n)*?)\\s*\\/cp-scaffold\\s*-->", replacement: "$1"}
     ];
     const fieldRegexs = [
         { source: "{{.*?\\/\\*.*?%%name%%.*?\\*\\/.*?}}", replacement: "<!-- {%%fieldname%%:%%fieldtype%%} -->" },
