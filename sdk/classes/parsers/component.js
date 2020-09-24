@@ -196,7 +196,13 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
     _componentName = name;
     //console.log(`Processing CmsComponent ${_componentName}`);
     let results = [];
-    const data = declaration.properties.find(p => p.type === "ObjectMethod" && p.key.name === "data");
+    // Specified as data() { ... }
+    let data = declaration.properties.find(p => p.type === "ObjectMethod" && p.key.name === "data");
+    if (!data) {
+        // Specified as data: function() { ... }
+        data = declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "data");
+        if (data) data = data.value;
+    }
     if (data) {
         const props = data.body.body[0].argument.properties;
         for (let i = 0; len = props.length, i < len; i++) {
