@@ -7,8 +7,7 @@ import { CmsDataCache, ICmsDataProvider, CmsNullDataProvider } from "crownpeak-d
 @Component
 export default class CmsPage extends Vue {
     cmsDataProvider?: ICmsDataProvider;
-    cmsAssetId: number = -1;
-    $cmsAssetId: number = -1;
+    $cmsAssetId?: number;
     cmsWrapper?: string;
 
     created (): void {
@@ -17,8 +16,12 @@ export default class CmsPage extends Vue {
             if (router && router.options && router.options.routes)
                 this.$cmsAssetId = ((router.options.routes.find(r => r.path === this.$route.path) || {}) as ICmsRouteConfigSingleView).cmsassetid || -1;
         }
-        this.cmsAssetId = this.$cmsAssetId;
-        (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.cmsAssetId);
-        CmsDataCache.cmsAssetId = this.cmsAssetId;
+        if(this.$cmsAssetId) {
+            (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId);
+            CmsDataCache.cmsAssetId = this.$cmsAssetId;
+        }
+        else {
+            console.error(`Cannot load content -- property $cmsAssetId on component ${this.$options.name} has no value`)
+        }
     }
 }
