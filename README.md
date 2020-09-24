@@ -269,17 +269,17 @@ Enables implementation of list items within DXM. Example usage below (note comme
 ### More Complex Replacements
 If your application code is too complex for the parser to be able to extract your fields, it is possible to provide your own markup for the Component Library to use instead of your component code:
 ```
-{/* cp-scaffold 
+<!-- cp-scaffold 
 <h2>{Heading:Text}</h2>
-else */}
-<h2>{ this.heading.value.length > MAX_LENGTH ? this.heading.value.substr(0, MAX_LENGTH) + "..." : this.heading }</h2>
-{/* /cp-scaffold */}
+else -->
+<h2>{{ heading.value.length > MAX_LENGTH ? heading.value.substr(0, MAX_LENGTH) + "..." : heading }}</h2>
+<!-- /cp-scaffold -->
 ```
 It is also possible to add extra markup that is not used directly in your application, for example to support extra data capture:
 ```
-{/* cp-scaffold 
+<!-- cp-scaffold 
 {SupplementaryField:Text}
-/cp-scaffold */}
+/cp-scaffold -->
 ```
 
 ### CmsFieldType
