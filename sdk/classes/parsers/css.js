@@ -1,5 +1,5 @@
 const fs = require("fs");
-const path = require('path');
+const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
 // TODO: imports
 const reUrl = /url\s*\(\s*((["']?)([^)]*)\2)\s*\)/ig;
@@ -20,16 +20,12 @@ const replaceUrls = (file, content, folderRoot) => {
             let url = matches[3];
             if (url.indexOf("http") < 0 && url.indexOf("//") < 0) {
                 //console.log(`Found url candidate ${url}`);
-                if (url.indexOf("?") >= 0) url = url.substr(0, url.indexOf("?"));
-                let filepath = folderRoot + url;
-                if (url.indexOf("/") !== 0) filepath = path.resolve(path.dirname(file), url);
+                const { path: filepath, folder: dir, filename } = utils.getPaths(file, url);
                 if (fs.existsSync(filepath)) {
-                    const filename = path.basename(url);
-                    const dest = "_Assets/" + (isImage(url) ? "images/" : "");
-                    let replacement = `"<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/${dest}${filename}\").GetLink() %>"`;
+                    let replacement = `"<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/${dir}${filename}\").GetLink() %>"`;
                     //console.log(`Replacement is ${replacement}`);
                     result = result.replace(matches[1], replacement);
-                    uploads.push({source: filepath, name: filename, destination: dest});
+                    uploads.push({source: filepath, name: filename, destination: dir});
                 }
             }
         }
@@ -42,15 +38,6 @@ const replaceUrls = (file, content, folderRoot) => {
         }
     }
     return { content: result, uploads: uploads };
-};
-
-const isImage = (url) => {
-    return url.indexOf(".jpg") > 0
-    || url.indexOf(".jpeg") > 0
-    || url.indexOf(".gif") > 0
-    || url.indexOf(".svg") > 0
-    || url.indexOf(".png") > 0
-    || url.indexOf(".webp") > 0;
 };
 
 module.exports = {

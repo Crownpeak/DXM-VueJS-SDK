@@ -17,7 +17,7 @@ const processCommand = (options) => {
     cms.init(config);
 
     const parser = require("../parsers/parser");
-    const files = require("../utils/files");
+    const files = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
     let components = [], pages = [], wrappers = [], uploads = [];
     const htmlfiles = files.getRecursive(cwd, "html");

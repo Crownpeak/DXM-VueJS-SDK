@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require('path');
 const cssParser = require("./css");
+const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
 const reSignature = new RegExp("<([a-z:0-9\\-]+).*?data-cms-wrapper-name\\s*=\\s*[\"']([^\"']+)[\"'](?:.|\\r|\\n)*?<\\/\\1>", "im");
 
@@ -40,14 +41,15 @@ const replaceScripts = (file, content) => {
     var matches;
     while (matches = regex.exec(content)) {
         if (matches && matches.length > 2 && matches[2]) {
-            if (matches[2].indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
-                //console.log(`Found script candidate ${matches[2]}`);
-                const filename = path.basename(matches[2]);
-                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/_Assets/js/${filename}\").GetLink() %>`;
+            let url = matches[2];
+            if (url.indexOf("http") < 0 && url.indexOf("//") < 0) {
+                //console.log(`Found script candidate ${url}`);
+                const { path: filepath, folder: dir, filename } = utils.getPaths(file, url);
+                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/${dir}${filename}\").GetLink() %>`;
                 if (!matches[1]) replacement = `\"${replacement}\"`;
                 //console.log(`Replacement is ${replacement}`);
-                result = result.replace(matches[2], replacement)
-                uploads.push({source: path.join(folder, matches[2]), name: filename, destination: "_Assets/js/"});
+                result = result.replace(url, replacement)
+                uploads.push({source: filepath, name: filename, destination: `${dir}`});
             }
         }
     }
@@ -64,25 +66,25 @@ const replaceLinks = (file, content) => {
     var matches;
     while (matches = regex.exec(content)) {
         if (matches && matches.length > 2 && matches[2]) {
-            if (matches[2].indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
-                //console.log(`Found link candidate ${matches[2]}`);
-                const filename = path.basename(matches[2]);
-                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/_Assets/css/${filename}\").GetLink(LinkType.Include) %>`;
+            let url = matches[2];
+            if (url.indexOf("http") < 0 && matches[2].indexOf("//") < 0) {
+                //console.log(`Found link candidate ${url}`);
+                const { path: filepath, folder: dir, filename } = utils.getPaths(file, url);
+                let replacement = `<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/${dir}${filename}\").GetLink(LinkType.Include) %>`;
                 if (!matches[1]) replacement = `\"${replacement}\"`;
                 //console.log(`Replacement is ${replacement}`);
-                result = result.replace(matches[2], replacement)
+                result = result.replace(url, replacement)
 
-                const filepath = path.join(folder, matches[2]);
                 if (fs.existsSync(filepath) && fs.lstatSync(filepath).isFile()) {
                     const result = cssParser.parse(filepath, fs.readFileSync(filepath, "utf8"), folder);
                     if (result.content && result.uploads && result.uploads.length) {
-                        uploads.push({source: filepath, name: filename, destination: "_Assets/css/", content: result.content});
+                        uploads.push({source: filepath, name: filename, destination: dir, content: result.content});
                         uploads = uploads.concat(result.uploads);
                     } else {
-                        uploads.push({source: filepath, name: filename, destination: "_Assets/css/"});
+                        uploads.push({source: filepath, name: filename, destination: dir});
                     }
                 } else {
-                    uploads.push({source: filepath, name: filename, destination: "_Assets/css/"});
+                    uploads.push({source: filepath, name: filename, destination: dir});
                 }
             }
         }
