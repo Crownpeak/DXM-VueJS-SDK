@@ -33,9 +33,6 @@ const processCommand = (options) => {
             wrappers.push(result.wrapper);
         }
     }
-    if (uploads && uploads.length) {
-        uploads = scaffoldCore.removeDuplicateUploads(uploads);
-    }
     const vueFiles = files.getRecursive(cwd, "vue");
     for (let f in vueFiles) {
         //console.log(`Processing ${vueFiles[f]}`);
@@ -48,6 +45,13 @@ const processCommand = (options) => {
             //console.log(`Found page definitions ${JSON.stringify(result.pages)}`);
             pages = pages.concat(result.pages);
         }
+        if (result.uploads) {
+            //console.log(`Found uploads ${JSON.stringify(result.uploads)}`);
+            uploads = uploads.concat(result.uploads);
+        }
+    }
+    if (uploads && uploads.length) {
+        uploads = scaffoldCore.removeDuplicateUploads(uploads);
     }
 
     scaffoldCore.process(cms, options, components, pages, wrappers, uploads);

@@ -22,7 +22,9 @@ const process = (file) => {
     }
     if (rePage.test(content)) {
         //console.log(`Found page in ${file}`)
-        pages = pageParser.parse(content, file);
+        const temp = pageParser.parse(content, file);
+        pages = temp.pages;
+        uploads = temp.uploads;
     }
     if (reWrapper.test(content)) {
         //console.log(`Found wrapper in ${file}`)
