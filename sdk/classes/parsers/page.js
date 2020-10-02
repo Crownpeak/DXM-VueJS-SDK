@@ -51,21 +51,42 @@ const parse = (content, file) => {
             const extnds = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "extends");
             let name = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "name");
             if (extnds && name && (extnds.value.name === "CmsDynamicPage" || extnds.value.name === "CmsStaticPage")) {
+                const cmsProps = processCmsProperties(content, name, part.declaration, imports);
                 name = name.value.value;
                 //console.log(`Found page ${name} extending ${extnds.value.name}`);
-                const data = processCmsPage(content, ast, name, part.declaration, imports);
-                if (data && data.components) {
-                    const result = processCmsPageTemplate(content, name, template, data.components, imports);
+                const components = processCmsPage(content, ast, name, part.declaration, imports);
+                if (components) {
+                    const result = processCmsPageTemplate(content, name, template, components, imports);
                     if (result) {
                         const processedResult = utils.replaceAssets(file, finalProcessMarkup(result), cssParser);
                         uploads = uploads.concat(processedResult.uploads);
-                        results.push({name: name, content: processedResult.content, wrapper: data.wrapper});
+                        results.push({name: name, content: processedResult.content, wrapper: cmsProps.wrapper, useTmf: cmsProps.useTmf === true});
                     }
                 }
             }
         }
     }
     return { pages: results, uploads: uploads };
+};
+
+const processCmsProperties = (content, name, declaration, imports) => {
+    return { 
+        useTmf: getCmsProperty(declaration, "cmsUseTmf", false),
+        wrapper: getCmsProperty(declaration, "cmsWrapper", undefined)
+    };
+};
+
+const getCmsProperty = (declaration, name, defaultValue) => {
+    const properties = declaration.properties;
+    for (let i = 0, len = properties.length; i < len; i++) {
+        const prop = properties[i];
+        if (prop.type === "ObjectProperty"
+            && prop.key && prop.key.name === name
+            && prop.value) {
+            return prop.value.value;
+        }
+    }
+    return defaultValue;
 };
 
 const initialProcessMarkup = (content) => {
@@ -147,12 +168,7 @@ const processCmsPage = (content, ast, name, declaration, imports) => {
             }
         }
     }
-    let wrapper = declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "cmsWrapper");
-    if (wrapper) {
-        //console.log(`Found reference to wrapper [${wrapper}]`);
-        wrapper = wrapper.value.value;
-    }
-    return {components: results, wrapper: wrapper};
+    return results;
 };
 
 const isDropZoneComponent = (componentName, importDefinition) => {
