@@ -10,6 +10,8 @@ export default class CmsPage extends Vue {
     $cmsAssetId?: number;
     cmsWrapper?: string;
     cmsUseTmf: boolean = false;
+    cmsSuppressModel: boolean = false;
+    cmsSuppressFolder: boolean = false;
 
     created (): void {
         if (!this.$cmsAssetId && this.$router && this.$route) {

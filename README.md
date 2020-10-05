@@ -367,7 +367,22 @@ Used to load content from a JSON Object on Filesystem and populate fields in Cms
 </script>
 ```
 
-## Usage - DXM Content-Type Scaffolding (cmsify)
+### Content creation options
+There are a number of options that can be specified on the constructor of an item that extends CmsPage.
+These are set as properties on the extending class. For example:
+```
+export default {
+    extends: CmsStaticPage,
+    useTmf: true,
+```
+| Property       | Description |
+| -------------- | ----------- |
+| useTmf         | If set, the resulting template will use the Translation Model Framework (TMF). Defaults to false. |
+| suppressModel  | If set, no model will be created for the resulting template. Defaults to false. |
+| suppressFolder | If set (or if suppressModel is set), no content folder will be created for the resulting model. Defaults to false. |
+
+---
+
 ## Installation - DXM Content-Type Scaffolding (cmsify)
 * Requires update to DXM Component Library, by installing <a href="https://raw.githubusercontent.com/Crownpeak/DXM-SDK-Core/master/dxm/dxm-cl-patch-for-sdk-latest.xml" target="_blank">dxm-cl-patch-for-sdk-latest.xml</a>.
 
