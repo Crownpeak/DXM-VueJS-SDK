@@ -1,4 +1,6 @@
 const babelParser = require("@babel/parser");
+const cssParser = require("./css");
+const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
 let _componentName = "";
 
@@ -8,7 +10,7 @@ const reList = /^([ \t]*)<!--\s*<List(.*?)\s*type=(["'])([^"']+?)\3(.*?)>\s*-->(
 const reListName = /\s+?name\s*=\s*(["'])([^"']+?)\1/i;
 const reListItemName = /\s+?itemName\s*=\s*(["'])([^"']+?)\1/i;
 
-const parse = (content) => {
+const parse = (content, file) => {
     let match = reTemplate.exec(content);
     if (!match) return;
     let template = match[1];
@@ -28,6 +30,7 @@ const parse = (content) => {
     }
 
     let results = [];
+    let uploads = [];
     let imports = [];
     let dependencies = [];
     const bodyParts = ast.program.body;
@@ -60,13 +63,15 @@ const parse = (content) => {
                 if (data) {
                     const result = processCmsComponentTemplate(content, name, template, data, imports, dependencies);
                     if (result) {
-                        results.push({name: name, content: finalProcessMarkup(result), dependencies: dependencies});
+                        const processedResult = utils.replaceAssets(file, finalProcessMarkup(result), cssParser, true);
+                        uploads = uploads.concat(processedResult.uploads);
+                        results.push({name: name, content: processedResult.content, dependencies: dependencies});
                     }
                 }
             }
         }
     }
-    return results;
+    return { components: results, uploads: uploads };
 };
 
 const finalProcessMarkup = (content) => {

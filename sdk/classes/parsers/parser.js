@@ -18,7 +18,9 @@ const process = (file) => {
 
     if (reComponent.test(content)) {
         //console.log(`Found component in ${file}`);
-        components = componentParser.parse(content);
+        const temp = componentParser.parse(content, file);
+        components = temp.components;
+        uploads = temp.uploads;
     }
     if (rePage.test(content)) {
         //console.log(`Found page in ${file}`)
