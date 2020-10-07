@@ -53,6 +53,18 @@ const processCommand = (options) => {
     if (uploads && uploads.length) {
         uploads = scaffoldCore.removeDuplicateUploads(uploads);
     }
+    if (options.only && options.only.length) {
+        components = components.filter(c => options.only.indexOf(c.name) >= 0);
+        pages = pages.filter(p => options.only.indexOf(p.name) >= 0);
+        wrappers = wrappers.filter(w => options.only.indexOf(w.name) >= 0);
+        uploads = uploads.filter(u => options.only.indexOf(u.name) >= 0);
+        // Set the --ignore-circular-dependencies to get around potential missing dependencies issues here
+        if (options["ignore-circular-dependencies"] !== true && options.ignorecirculardependencies !== true) {
+            options["ignore-circular-dependencies"] = 
+                options.ignorecirculardependencies = 
+                options["do-not-warn-about-circular-dependencies"] = true;
+        }
+    }
 
     scaffoldCore.process(cms, options, components, pages, wrappers, uploads);
 };

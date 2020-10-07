@@ -464,12 +464,13 @@ The `crownpeak scaffold` script supports a number of optional command-line param
 | `--dry-run`      | Report on the items that would be imported into the CMS, but do not import them. |
 | `--verbose`      | Show verbose output where applicable. |
 | `--verify`       | Verify that the Crownpeak DXM environment is configured correctly. |
-| `--nocomponents` | Do not import any components. |
-| `--nopages`      | Do not import any pages, templates, or models. |
-| `--nouploads`    | Do not import any uploads; for example CSS, JavaScript or images. |
-| `--nowrappers`   | Do not import any wrappers. |
+| `--no-components` | Do not import any components. |
+| `--no-pages`      | Do not import any pages, templates, or models. |
+| `--no-uploads`    | Do not import any uploads; for example CSS, JavaScript or images. |
+| `--no-wrappers`   | Do not import any wrappers. |
+| `--only <name>`   | Only import items matching the specified name. Can be used multiple times. |
 
-These are intended to improve performance for multiple runs, and you should expect to see errors if the items being skipped have not already been created within the CMS; for example, if you provide the `--nocomponents` parameter where the components have not previously been imported.
+These are intended to improve performance for multiple runs, and you should expect to see errors if the items being skipped have not already been created within the CMS; for example, if you provide the `--no-components` parameter where the components have not previously been imported.
 
 ## routes.json File Structure Example
 ```
