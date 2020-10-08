@@ -5,6 +5,7 @@ import { CmsDataCache, CmsDataSource } from 'crownpeak-dxm-sdk-core';
 
 @Component
 export default class CmsComponent extends Vue {
+    cmsFolder?: string = "";
     created(): void {
         CmsDataCache.cmsComponentName = (this.$options as ICmsComponentOptions)._componentTag;
         // TODO: pass in data source like props on React?

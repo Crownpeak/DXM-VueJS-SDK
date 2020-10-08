@@ -57,6 +57,7 @@ const parse = (content, file) => {
             const extnds = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "extends");
             let name = part.declaration.properties.find(p => p.type === "ObjectProperty" && p.key.name === "name");
             if (extnds && extnds.value.name === "CmsComponent" && name) {
+                const cmsProps = processCmsProperties(content, name, part.declaration, imports);
                 name = name.value.value;
                 //console.log(`Found component ${name} extending CmsComponent`);
                 const data = processCmsComponent(content, ast, name, part.declaration, imports, dependencies);
@@ -65,7 +66,7 @@ const parse = (content, file) => {
                     if (result) {
                         const processedResult = utils.replaceAssets(file, finalProcessMarkup(result), cssParser, true);
                         uploads = uploads.concat(processedResult.uploads);
-                        results.push({name: name, content: processedResult.content, dependencies: dependencies});
+                        results.push({name: name, content: processedResult.content, folder: cmsProps.folder, dependencies: dependencies});
                     }
                 }
             }
@@ -271,6 +272,25 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
         }
     }
     return results;
+};
+
+const processCmsProperties = (content, name, declaration, imports) => {
+    return { 
+        folder: getCmsProperty(declaration, "cmsFolder", "")
+    };
+};
+
+const getCmsProperty = (declaration, name, defaultValue) => {
+    const properties = declaration.properties;
+    for (let i = 0, len = properties.length; i < len; i++) {
+        const prop = properties[i];
+        if (prop.type === "ObjectProperty"
+            && prop.key && prop.key.name === name
+            && prop.value) {
+            return prop.value.value;
+        }
+    }
+    return defaultValue;
 };
 
 const cmsFieldTypeToString = (cmsFieldType) => {
