@@ -112,7 +112,10 @@ name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset whe
             PostArchives,
             Footer
         },
-        cmsWrapper: "" //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
+        cmsWrapper: "",          //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
+        cmsUseTmf: false,        //set to true to create templates that use the Translation Model Framework.
+        cmsSuppressModel: false, //set to true to suppress model and content folder creation when scaffolding.
+        cmsSuppressFolder: false //set to true to suppress content folder creation when scaffolding.
     };
 </script>
 ```
@@ -175,7 +178,10 @@ Loads payload data from DXM Dynamic Content API upon request - expects knowledge
             PostArchives,
             Footer
         },
-        cmsWrapper: "" //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
+        cmsWrapper: "",          //insert Wrapper Name from data-cms-wrapper-name in HTML, or don't include property to accept defaults.
+        cmsUseTmf: false,        //set to true to create templates that use the Translation Model Framework.
+        cmsSuppressModel: false, //set to true to suppress model and content folder creation when scaffolding.
+        cmsSuppressFolder: false //set to true to suppress content folder creation when scaffolding.
     };
 </script>
 ```
@@ -196,6 +202,7 @@ Includes CmsField references for content rendering from DXM within a Vue.js Comp
     export default {
         extends: CmsComponent,
         name: "BlogPost",
+        cmsFolder: "", //set the subfolder in which the component will be created when scaffolding.
         data() {
             return {
                 post_title: new CmsField("Post_Title", CmsFieldTypes.TEXT),
