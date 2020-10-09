@@ -51,3 +51,4 @@ Data Sources**
 | 2.1.1         | 2020JUL29     | Updated crownpeak-dxm-sdk-core version.    |
 | 2.2.0         | 2020SEP03     | Add support for indexed fields and cp-scaffold. Bug fixes. |
 | 2.3.0         | 2020OCT01     | Preserve paths for uploads, support uploads from pages and wrappers. Bug fixes. |
+| 2.4.0         | 2020OCT09     | Improved uploading and relinking, new page and component creation settings, new --only option. Bug fixes. |
