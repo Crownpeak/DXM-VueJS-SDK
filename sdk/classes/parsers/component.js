@@ -49,7 +49,7 @@ const parse = (content, file) => {
     }
 
     // Parse out any special lists
-    template = replaceLists(template);
+    template = replaceLists(template, dependencies);
 
     for (let i = 0, len = bodyParts.length; i < len; i++) {
         const part = bodyParts[i];
@@ -84,7 +84,7 @@ const finalProcessMarkup = (content) => {
     return trimSharedLeadingWhitespace(content);
 };
 
-const replaceLists = (content) => {
+const replaceLists = (content, dependencies) => {
     let match;
     while (match = reList.exec(content)) {
         let attributes = " " + match[2] + " " + match[5];
@@ -108,6 +108,7 @@ const replaceLists = (content) => {
         }
         //console.log(`Found list with name ${name}`);
         const repl = `${ws}<cp-list name="${name}">\r\n${ws}  {${itemName}:${type}}\r\n${ws}</cp-list>`;
+        addDependency(type, dependencies);
         content = content.replace(match[0], repl);
     }
     return content;
@@ -165,33 +166,51 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
     // Longest name first to avoid substring replacements
     var dataItems = data.sort((a, b) => b.name.length - a.name.length);
     for (let i = 0, len = dataItems.length; i < len; i++) {
-        //console.log(`Looking for ${data[i].name}`);
-        if (data[i].fieldName) {
-            let indexedField = cmsIndexedFieldToString(data[i].indexedField);
+        //console.log(`Looking for ${dataItems[i].name}`);
+        if (dataItems[i].fieldName) {
+            let indexedField = cmsIndexedFieldToString(dataItems[i].indexedField);
             if (indexedField) indexedField = ":" + indexedField;
             for (let j = 0, lenJ = fieldRegexs.length; j < lenJ; j++) {
-                let regex = new RegExp(fieldRegexs[j].source.replace("%%name%%", data[i].name));
+                let regex = new RegExp(fieldRegexs[j].source.replace("%%name%%", dataItems[i].name));
                 let match = regex.exec(result);
                 while (match) {
-                    const replacement = fieldRegexs[j].replacement.replace("%%fieldname%%", data[i].fieldName).replace("%%fieldtype%%", data[i].fieldType + indexedField);
+                    const replacement = fieldRegexs[j].replacement.replace("%%fieldname%%", dataItems[i].fieldName).replace("%%fieldtype%%", dataItems[i].fieldType + indexedField);
                     //console.log(`Replacing [${match[0]}] with [${replacement}]`);
                     result = result.replace(regex, replacement);
+                    addDependency(dataItems[i].fieldType, dependencies);
                     match = regex.exec(result);
                 }
             }
-        } else if (data[i].componentName) {
+        } else if (dataItems[i].componentName) {
             for (let j = 0, lenJ = componentRegexs.length; j < lenJ; j++) {
-                let regex = new RegExp(componentRegexs[j].source.replace("%%name%%", data[i].name));
+                let regex = new RegExp(componentRegexs[j].source.replace("%%name%%", dataItems[i].name));
                 let match = regex.exec(result);
                 let index = 0;
                 while (match) {
-                    if (dependencies.indexOf(data[i].componentName) < 0) dependencies.push(data[i].componentName);
                     let suffix = ++index > 1 ? "_" + index : "";
-                    let replacement = componentRegexs[j].replacement.replace("%%name%%", data[i].name + suffix).replace("%%componentname%%", data[i].componentName);
+                    let replacement = componentRegexs[j].replacement.replace("%%name%%", dataItems[i].name + suffix).replace("%%componentname%%", dataItems[i].componentName);
                     //console.log(`Replacing [${match[0]}] with [${replacement}]`);
                     result = result.replace(regex, replacement);
+                    addDependency(dataItems[i].componentName, dependencies);
                     match = regex.exec(result);
                 }
+            }
+        }
+    }
+    let importItems = imports.sort((a, b) => b.length - a.length);
+    for (let i = 0, len = importItems.length; i < len; i++) {
+        //console.log(`Looking for ${importItems[i]}`);
+        for (let j = 0, lenJ = componentRegexs.length; j < lenJ; j++) {
+            let regex = new RegExp(componentRegexs[j].source.replace("%%name%%", importItems[i]));
+            let match = regex.exec(result);
+            let index = 0;
+            while (match) {
+                let suffix = ++index > 1 ? "_" + index : "";
+                let replacement = componentRegexs[j].replacement.replace("%%name%%", importItems[i] + suffix).replace("%%componentname%%", importItems[i]);
+                //console.log(`Replacing [${match[0]}] with [${replacement}]`);
+                result = result.replace(regex, replacement);
+                addDependency(importItems[i], dependencies);
+                match = regex.exec(result);
             }
         }
     }
@@ -291,6 +310,11 @@ const getCmsProperty = (declaration, name, defaultValue) => {
         }
     }
     return defaultValue;
+};
+
+const addDependency = (type, dependencies) => {
+    if (utils.isCoreComponent(type)) return;
+    if (dependencies.indexOf(type) < 0) dependencies.push(type);
 };
 
 const cmsFieldTypeToString = (cmsFieldType) => {
