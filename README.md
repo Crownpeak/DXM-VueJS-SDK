@@ -203,6 +203,7 @@ Includes CmsField references for content rendering from DXM within a Vue.js Comp
         extends: CmsComponent,
         name: "BlogPost",
         cmsFolder: "", //set the subfolder in which the component will be created when scaffolding.
+        cmsZones: [],  //set the zones into which the component is permitted to be dropped.
         data() {
             return {
                 post_title: new CmsField("Post_Title", CmsFieldTypes.TEXT),

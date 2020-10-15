@@ -66,7 +66,7 @@ const parse = (content, file) => {
                     if (result) {
                         const processedResult = utils.replaceAssets(file, finalProcessMarkup(result), cssParser, true);
                         uploads = uploads.concat(processedResult.uploads);
-                        results.push({name: name, content: processedResult.content, folder: cmsProps.folder, dependencies: dependencies});
+                        results.push({name: name, content: processedResult.content, folder: cmsProps.folder, zones: typeof(cmsProps.zones) === "string" ? cmsProps.zones.split(",") : cmsProps.zones, dependencies: dependencies});
                     }
                 }
             }
@@ -295,7 +295,8 @@ const processCmsComponent = (content, ast, name, declaration, imports, dependenc
 
 const processCmsProperties = (content, name, declaration, imports) => {
     return { 
-        folder: getCmsProperty(declaration, "cmsFolder", "")
+        folder: getCmsProperty(declaration, "cmsFolder", ""),
+        zones: getCmsProperty(declaration, "cmsZones", [])
     };
 };
 
@@ -306,7 +307,11 @@ const getCmsProperty = (declaration, name, defaultValue) => {
         if (prop.type === "ObjectProperty"
             && prop.key && prop.key.name === name
             && prop.value) {
-            return prop.value.value;
+            if (prop.value.type === "ArrayExpression") {
+                return prop.value.elements.map(e => e.value);
+            } else {
+                return prop.value.value;
+            }
         }
     }
     return defaultValue;
