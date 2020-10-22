@@ -12,6 +12,7 @@ export default class CmsPage extends Vue {
     cmsUseTmf: boolean = false;
     cmsSuppressModel: boolean = false;
     cmsSuppressFolder: boolean = false;
+    isLoaded: boolean = false;
 
     created (): void {
         if (!this.$cmsAssetId && this.$router && this.$route) {
@@ -20,7 +21,8 @@ export default class CmsPage extends Vue {
                 this.$cmsAssetId = ((router.options.routes.find(r => r.path === this.$route.path) || {}) as ICmsRouteConfigSingleView).cmsassetid || -1;
         }
         if(this.$cmsAssetId) {
-            (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId);
+            const that = this;
+            (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId).then(() => that.isLoaded = true);
             CmsDataCache.cmsAssetId = this.$cmsAssetId;
         }
         else {

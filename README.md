@@ -58,7 +58,7 @@ Loads payload data from JSON file on filesystem - expects knowledge of DXM Asset
 name (e.g., 12345.json). CmsStaticPage is the data equivalent of a DXM Asset when used as a page.
 ```
 <template>
-    <div>
+    <div v-if="isLoaded">
         <div class="container">
             <Header month="this.props.match.params.month"/>
             <TopicList/>

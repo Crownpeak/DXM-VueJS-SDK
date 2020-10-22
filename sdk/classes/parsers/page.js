@@ -98,6 +98,7 @@ const initialProcessMarkup = (content) => {
 };
 
 const finalProcessMarkup = (content) => {
+    content = content.replace(/\s+v-if=(["']?)isLoaded\1/ig, "");
     return trimSharedLeadingWhitespace(content);
 };
 
