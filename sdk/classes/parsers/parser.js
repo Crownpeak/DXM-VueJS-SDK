@@ -3,7 +3,6 @@ const componentParser = require("./component");
 const pageParser = require("./page");
 const wrapperParser = require("./wrapper");
 
-const reComponent = new RegExp("extends\\s*:\\s*CmsComponent");
 const rePage = new RegExp("extends\\s*:\\s*Cms(Dynamic|Static)Page");
 const reWrapper = new RegExp("data-cms-wrapper-name=");
 
@@ -16,7 +15,7 @@ const process = (file) => {
 
     let components = [], pages = [], wrapper = null, uploads = [];
 
-    if (reComponent.test(content)) {
+    if (componentParser.isCmsComponent(file, content)) {
         //console.log(`Found component in ${file}`);
         const temp = componentParser.parse(content, file);
         components = temp.components;

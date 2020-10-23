@@ -1,24 +1,21 @@
+const fs = require("fs");
+const path = require('path');
 const babelParser = require("@babel/parser");
 const cssParser = require("./css");
 const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
 let _componentName = "";
+let _componentCache = {};
 
-const reTemplate = /<template>\s*((?:.|\r|\n)+)\s*<\/template>/i;
-const reScript = /<script>\s*((?:.|\r|\n)+)\s*<\/script>/i;
 const reList = /^([ \t]*)<!--\s*<List(.*?)\s*type=(["'])([^"']+?)\3(.*?)>\s*-->((.|\s)*?)<!--\s*<\/List>\s*-->/im;
 const reListName = /\s+?name\s*=\s*(["'])([^"']+?)\1/i;
 const reListItemName = /\s+?itemName\s*=\s*(["'])([^"']+?)\1/i;
 
 const parse = (content, file) => {
-    let match = reTemplate.exec(content);
-    if (!match) return;
-    let template = match[1];
+    const {templates, scripts, styles} = getParts(file, content);
 
-    match = reScript.exec(content);
-    if (!match) return;
-    
-    const script = match[1];
+    let template = templates.join("\n");
+    const script = scripts.join("\n");
 
     const ast = babelParser.parse(script, {
         sourceType: "module"
@@ -124,7 +121,7 @@ const trimSharedLeadingWhitespace = (content) => {
         let line = lines[i];
         if (i == 0 || onlyWhitespace.test(line)) continue;
         let match = line.match(leadingWhitespace);
-        if (match && match[0].length) maxLeader = Math.min(maxLeader, match[0].length);
+        if (match) maxLeader = Math.min(maxLeader, match[0].length);
     }
     if (maxLeader > 0) {
         const leadingWhitespaceReplacer = new RegExp(`^\\s{${maxLeader}}`);
@@ -354,6 +351,67 @@ const cmsIndexedFieldToString = (cmsIndexedField) => {
     return "Indexed" + cmsIndexedField;
 };
 
+const getItemsByTag = (file, content, tag) => {
+    const reItems = new RegExp(`<${tag}.*?(?:>(?:.|\\r|\\n)*?<\\/${tag}>|\\/>)`, "ig");
+    const reSrc = new RegExp(`<${tag}[^>]*\\s+src\\s*=\\s*(["']?)([^"']*?)\\1`, "i");
+    const reContent = new RegExp(`<${tag}(?:[^>]*?)>\\s*((?:.|\\s)*?)<\\/${tag}>`, "i");
+
+    let results = [];
+    let item;
+    while (item = reItems.exec(content)) {
+        //console.log(`DEBUG: found ${match}`);
+        let src = reSrc.exec(item);
+        if (src && src.length > 2) {
+            // This item has a src attribute, so follow it if we can
+            if (src[2].indexOf("http") < 0 && src[2].indexOf("//") !== 0) {
+                const filepath = path.resolve(path.dirname(file), src[2]);
+                if (fs.existsSync(filepath) && fs.statSync(filepath).isFile()) results.push(fs.readFileSync(filepath));
+            }
+        } else {
+            let content = reContent.exec(item);
+            if (content && content.length > 1) {
+                // This item has content
+                results.push(content[1]);
+            }
+        }
+    }
+    return results;
+};
+
+const getTemplates = (file, content) => {
+    return getItemsByTag(file, content, "template");
+};
+
+const getScripts = (file, content) => {
+    return getItemsByTag(file, content, "script");
+};
+
+const getStyles = (file, content) => {
+    return getItemsByTag(file, content, "style");
+};
+
+const getParts = (file, content) => {
+    let result = _componentCache[file];
+    if (!result) {
+        result = { 
+            templates: getTemplates(file, content),
+            scripts: getScripts(file, content),
+            styles: getStyles(file, content)
+        };
+        _componentCache[file] = result;
+    }
+    return result;
+};
+
+const isCmsComponent = (file, content) => {
+    const reComponent = new RegExp("extends\\s*:\\s*CmsComponent");
+
+    //console.log(`Checking if ${file} is a CMS component`);
+    const { templates, scripts, styles } = getParts(file, content);
+    return scripts.filter(s => reComponent.exec(s)).length > 0;
+};
+
 module.exports = {
-    parse: parse
+    parse: parse,
+    isCmsComponent: isCmsComponent
 };

@@ -182,6 +182,8 @@ const isDropZoneComponent = (componentName, importDefinition) => {
 
 const getSource = (source) => {
     source = path.resolve(path.dirname(_fileName), source);
+    // References can be to a folder - if so, look for index.js within
+    if (fs.existsSync(source) && fs.statSync(source).isDirectory()) source = path.resolve(source, "index.js");
     if (fs.existsSync(source)) return fs.readFileSync(source);
 
     for (let i in extensions) {
