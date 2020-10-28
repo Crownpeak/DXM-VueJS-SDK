@@ -3,6 +3,7 @@
 const arguments = require("crownpeak-dxm-sdk-core/lib/crownpeak/arguments");
 const init = require("crownpeak-dxm-sdk-core/lib/crownpeak/init");
 const patch = require("crownpeak-dxm-sdk-core/lib/crownpeak/patch");
+const upgrade = require("crownpeak-dxm-sdk-core/lib/crownpeak/upgrade");
 const scaffold = require("./scaffold");
 const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
@@ -23,7 +24,10 @@ const main = (args) => {
         case "scaffold":
             if (!scaffold.validate(options)) return false;
             return scaffold.process(options);
-    }
+        case "upgrade":
+            if (!upgrade.validate(options)) return false;
+            return upgrade.process(options);
+        }
     return arguments.showUsage();
 };
 
