@@ -309,10 +309,10 @@ core-util-is@1.0.2:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-crownpeak-dxm-accessapi-helper@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-accessapi-helper/-/crownpeak-dxm-accessapi-helper-1.0.4.tgz#5aa5cc9c29c4023a5a0025a840b353228314495e"
-  integrity sha512-62yC9zkAQfZhpUHSpIQdkNJDYLwT1vH1rMuN/W569gEL+rpqA0lVtySZNFKWWQIh2+k47Gd5lJDKeZEFksAfPQ==
+crownpeak-dxm-accessapi-helper@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-accessapi-helper/-/crownpeak-dxm-accessapi-helper-1.0.5.tgz#8189dd2836c8c2100c514698bb42912960d1c4a3"
+  integrity sha512-UgTIegfhdxoWLfaubyziqcK4GPJ1GVwJNFLOhfllgqu5ZS3pPSHueph+3/uHPnLVjCmVzQ8r83TSg7QlcdyLFA==
   dependencies:
     istextorbinary "^2.5.1"
     mocha "^7.1.2"
@@ -321,12 +321,12 @@ crownpeak-dxm-accessapi-helper@^1.0.4:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
-crownpeak-dxm-sdk-core@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-2.4.0.tgz#a1fb3c373009797584b5b70e98b15c23eb8bebfc"
-  integrity sha512-tIrBYty/gJjccz5MjBo1a3ppDIEqaOPygcJm3dRc82Ny4c3y+aCnjsMp4jlcxzqE4I0WKQIWru5DmMbuxxJDYA==
+crownpeak-dxm-sdk-core@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-3.0.0.tgz#7084176260447e8e5e2472f20f0e987833bc6c8d"
+  integrity sha512-4jC1tm+O5Yy5Q13F6+JrSzgBj3q2RaNf6rdsjhIBzhSazt2vIpJvAVdPNv7nDB7L8LQDhvlFxRERGEcxUZjctQ==
   dependencies:
-    crownpeak-dxm-accessapi-helper "^1.0.4"
+    crownpeak-dxm-accessapi-helper "^1.0.5"
     minimist "^1.2.5"
     xml2js "^0.4.23"
 

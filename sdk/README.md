@@ -52,3 +52,4 @@ Data Sources**
 | 2.2.0         | 2020SEP03     | Add support for indexed fields and cp-scaffold. Bug fixes. |
 | 2.3.0         | 2020OCT01     | Preserve paths for uploads, support uploads from pages and wrappers. Bug fixes. |
 | 2.4.0         | 2020OCT09     | Improved uploading and relinking, new page and component creation settings, new --only option. Bug fixes. |
+| 3.0.0         | 2020NOV06     | Change to asynchronous data loading, drag and drop zone governance, multi-file component support. Bug fixes. |
