@@ -99,6 +99,8 @@ const initialProcessMarkup = (content) => {
 
 const finalProcessMarkup = (content) => {
     content = content.replace(/\s+v-if=(["']?)isLoaded\1/ig, "");
+    // Replacements from .cpscaffold.json file
+    content = utils.replaceMarkup(content);
     return trimSharedLeadingWhitespace(content);
 };
 
