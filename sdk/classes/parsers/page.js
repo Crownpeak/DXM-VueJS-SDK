@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('path');
 const cssParser = require("./css");
 const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
+const component = require("./component");
 
 let _pageName = "";
 let _fileName = "";
@@ -43,7 +44,10 @@ const parse = (content, file) => {
                 if ((specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportSpecifier")
                     && specifier.local && specifier.local.type === "Identifier") {
                     //console.log(`Found import ${specifier.local.name}, ${part.source.value}`);
-                    imports.push({name: specifier.local.name, source: part.source.value});
+                    const imp = {name: specifier.local.name, source: part.source.value};
+                    imp.isCmsComponent = isCmsComponentInternal(imp.name, imp);
+                    //console.log(`Found import ${imp.name}, ${imp.source}, ${imp.isCmsComponent}`);
+                    imports.push(imp);
                 }
             }
         }
@@ -191,17 +195,36 @@ const processCmsPage = (content, ast, name, declaration, imports) => {
             const prop = props[i];
             if (prop.type === "ObjectProperty") {
                 //console.log(`Found component property [${prop.key.name}]`);
-                importDefinition = imports.find(i => prop.key.name === i.name)
-                if (isDropZoneComponent(prop.key.name, importDefinition)) continue; // DropZones are processed by TemplateBuilder
-                results.push({
-                    name: prop.key.name,
-                    componentName: prop.key.name
-                });
+                importDefinition = imports.find(i => prop.key.name === i.name && i.isCmsComponent);
+                if (importDefinition) {
+                    if (isDropZoneComponent(prop.key.name, importDefinition)) continue; // DropZones are processed by TemplateBuilder
+                    results.push({
+                        name: prop.key.name,
+                        componentName: prop.key.name
+                    });
+                }
             }
         }
     }
     return results;
 };
+
+const isCmsComponentInternal = (componentName, importDefinition) => {
+    //console.log(`Checking ${componentName} (${JSON.stringify(importDefinition)}) for being a CmsComponent`);
+    if (!importDefinition || !importDefinition.source) return false;
+    let source = path.resolve(path.dirname(_fileName), importDefinition.source);
+    if (fs.existsSync(source)) {
+        if (fs.lstatSync(source).isFile()) return component.isCmsComponent(source, fs.readFileSync(source));
+        // This is a directory, so look for a .vue file within
+        const vueFile = fs.readdirSync(source).find(f => f.length > 4 && f.substr(-4) === ".vue");
+        if (vueFile && fs.lstatSync(source + path.sep + vueFile).isFile()) return component.isCmsComponent(source + path.sep + vueFile, fs.readFileSync(source + path.sep + vueFile));
+    }
+    for (let i in extensions) {
+        const ext = extensions[i];
+        if (fs.existsSync(source + ext) && fs.lstatSync(source + ext).isFile()) return component.isCmsComponent(source + ext, fs.readFileSync(source + ext));
+    }
+    return false;
+}
 
 const isDropZoneComponent = (componentName, importDefinition) => {
     //console.log(`Checking ${componentName} (${JSON.stringify(importDefinition)}) for extending CmsDropZoneComponent`);

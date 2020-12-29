@@ -3,8 +3,10 @@ const path = require('path');
 const babelParser = require("@babel/parser");
 const cssParser = require("./css");
 const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
+const extensions = [".vue", ".js"];
 
 let _componentName = "";
+let _fileName = "";
 let _componentCache = {};
 
 const reList = /^([ \t]*)<!--\s*<List(.*?)\s*type=(["'])([^"']+?)\3(.*?)>\s*-->((.|\s)*?)<!--\s*<\/List>\s*-->/im;
@@ -12,12 +14,13 @@ const reListName = /\s+?name\s*=\s*(["'])([^"']+?)\1/i;
 const reListItemName = /\s+?itemName\s*=\s*(["'])([^"']+?)\1/i;
 
 const parse = (content, file) => {
+    _fileName = file;
     const {templates, scripts, styles} = getParts(file, content);
 
     let template = templates.join("\n");
-    const script = scripts.join("\n");
+    let script = scripts.join("\n");
 
-    const ast = babelParser.parse(script, {
+    let ast = babelParser.parse(script, {
         sourceType: "module"
     });
     //console.log(JSON.stringify(ast));
@@ -38,8 +41,10 @@ const parse = (content, file) => {
                 const specifier = part.specifiers[i];
                 if ((specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportSpecifier")
                     && specifier.local && specifier.local.type === "Identifier") {
-                    //console.log(`Found import ${specifier.local.name}`);
-                    imports.push(specifier.local.name);
+                    const imp = {name: specifier.local.name, source: part.source.value};
+                    imp.isCmsComponent = isCmsComponentInternal(imp.name, imp);
+                    //console.log(`Found import ${imp.name}, ${imp.source}, ${imp.isCmsComponent}`);
+                    imports.push(imp);
                 }
             }
         }
@@ -199,19 +204,19 @@ const processCmsComponentTemplate = (content, name, template, data, imports, dep
             }
         }
     }
-    let importItems = imports.sort((a, b) => b.length - a.length);
+    let importItems = imports.filter(i => i.isCmsComponent).sort((a, b) => b.name.length - a.name.length);
     for (let i = 0, len = importItems.length; i < len; i++) {
-        //console.log(`Looking for ${importItems[i]}`);
+        //console.log(`Looking for ${importItems[i].name}`);
         for (let j = 0, lenJ = componentRegexs.length; j < lenJ; j++) {
-            let regex = new RegExp(componentRegexs[j].source.replace("%%name%%", importItems[i]));
+            let regex = new RegExp(componentRegexs[j].source.replace("%%name%%", importItems[i].name));
             let match = regex.exec(result);
             let index = 0;
             while (match) {
                 let suffix = ++index > 1 ? "_" + index : "";
-                let replacement = componentRegexs[j].replacement.replace("%%name%%", importItems[i] + suffix).replace("%%componentname%%", importItems[i]);
+                let replacement = componentRegexs[j].replacement.replace("%%name%%", importItems[i].name + suffix).replace("%%componentname%%", importItems[i].name);
                 //console.log(`Replacing [${match[0]}] with [${replacement}]`);
                 result = result.replace(regex, replacement);
-                addDependency(importItems[i], dependencies);
+                addDependency(importItems[i].name, dependencies);
                 match = regex.exec(result);
             }
         }
@@ -404,6 +409,23 @@ const getParts = (file, content) => {
     }
     return result;
 };
+
+const isCmsComponentInternal = (componentName, importDefinition) => {
+    //console.log(`Checking ${componentName} (${JSON.stringify(importDefinition)}) for being a CmsComponent`);
+    if (!importDefinition || !importDefinition.source) return false;
+    let source = path.resolve(path.dirname(_fileName), importDefinition.source);
+    if (fs.existsSync(source)) {
+        if (fs.lstatSync(source).isFile()) return isCmsComponent(source, fs.readFileSync(source));
+        // This is a directory, so look for a .vue file within
+        const vueFile = fs.readdirSync(source).find(f => f.length > 4 && f.substr(-4) === ".vue");
+        if (vueFile && fs.lstatSync(source + path.sep + vueFile).isFile()) return isCmsComponent(source + path.sep + vueFile, fs.readFileSync(source + path.sep + vueFile));
+    }
+    for (let i in extensions) {
+        const ext = extensions[i];
+        if (fs.existsSync(source + ext) && fs.lstatSync(source + ext).isFile()) return isCmsComponent(source + ext, fs.readFileSync(source + ext));
+    }
+    return false;
+}
 
 const isCmsComponent = (file, content) => {
     const reComponent = new RegExp("extends\\s*:\\s*CmsComponent");
