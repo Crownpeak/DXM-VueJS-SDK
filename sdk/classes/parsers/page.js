@@ -129,10 +129,27 @@ const trimSharedLeadingWhitespace = (content) => {
 };
 
 const processCmsPageTemplate = (content, name, template, components, imports) => {
+    const scaffoldPreRegexs = [
+        { source: "<!--\\s*cp-scaffold\\s*((?:.|\\r|\\n)*?)\\s*else\\s*-->\\s*((?:.|\\r|\\n)*?)\\s*<!--\\s*\\/cp-scaffold\\s*-->", replacement: "<!-- cp-pre-scaffold $1 /cp-pre-scaffold -->" },
+        { source: "<!--\\s*cp-scaffold\\s*((?:.|\\r|\\n)*?)\\s*\\/cp-scaffold\\s*-->", replacement: "$1"}
+    ];
+    const scaffoldPostRegexs = [
+        { source: "<!--\\s*cp-pre-scaffold\\s*((?:.|\\r|\\n)*?)\\s*\\/cp-pre-scaffold\\s*-->", replacement: "$1"}
+    ];
     const componentRegexs = [
         { source: "<(%%name%%)([^>]*?)(>.*?<\\/\\1>|\\/>)", replacement: "{%%name%%}" }
     ];
     let result = template;
+    for (let j = 0, lenJ = scaffoldPreRegexs.length; j < lenJ; j++) {
+        let regex = new RegExp(scaffoldPreRegexs[j].source);
+        let match = regex.exec(result);
+        while (match) {
+            let replacement = scaffoldPreRegexs[j].replacement;
+            //console.log(`Replacing [${match[0]}] with [${replacement}]`);
+            result = result.replace(regex, replacement);
+            match = regex.exec(result);
+        }
+    }
     // Longest name first to avoid substring replacements
     var dataItems = components.sort((a, b) => b.name.length - a.name.length);
     for (let i = 0, len = dataItems.length; i < len; i++) {
@@ -148,6 +165,16 @@ const processCmsPageTemplate = (content, name, template, components, imports) =>
                 result = result.replace(regex, replacement);
                 match = regex.exec(result);
             }
+        }
+    }
+    for (let j = 0, lenJ = scaffoldPostRegexs.length; j < lenJ; j++) {
+        let regex = new RegExp(scaffoldPostRegexs[j].source);
+        let match = regex.exec(result);
+        while (match) {
+            let replacement = scaffoldPostRegexs[j].replacement;
+            //console.log(`Replacing [${match[0]}] with [${replacement}]`);
+            result = result.replace(regex, replacement);
+            match = regex.exec(result);
         }
     }
     return result;
