@@ -285,7 +285,7 @@ Enables implementation of list items within DXM. Example usage below (note comme
 ```
 
 ### More Complex Replacements
-If your application code is too complex for the parser to be able to extract your fields, it is possible to provide your own markup for the Component Library to use instead of your component code:
+If your application code is too complex for the parser to be able to extract your fields, it is possible to provide your own markup for the Component Library to use instead of your component and page code:
 ```
 <!-- cp-scaffold 
 <h2>{Heading:Text}</h2>
@@ -299,6 +299,31 @@ It is also possible to add extra markup that is not used directly in your applic
 {SupplementaryField:Text}
 /cp-scaffold -->
 ```
+
+### String Replacements
+If your application code uses components that are not directly contained with your application, the markup will not be detected during the parsing process. For this (and other) use-cases, you can now supply a list of string replacements that will be made at the end of the parsing process.
+
+To do this, create a `.cpscaffold.json` file in the root of the project, as follows:
+```
+{
+    "replacements": {
+        "source": "replacement",
+        "second_source": "second_replacement"
+    }
+}
+```
+Each key inside the `replacements` item contains the item to be replaced, and its value contains the replacement.
+
+The source string will be turned into a regular expression, so characters that are meaningful in RegExps should be escaped using `\\`. This support allows for more complex replacements such as:
+```
+"<Col ([a-z]{2})=\\{([0-9]+)\\}>": "<div class=\"col-$1-$2\">"
+```
+
+If the source string contains a well-formed tag declaration, for example `<div>`, any corresponding element in the source string will match, including those with attributes. The replacement operation also combines duplicate attributes, if present after replacement, using a space to separate the values. So, for example, if the `.cpscaffold.json` replacements contains:
+```
+"<Container>": "<div class=\"container\">",
+```
+A source string containing `<Container class="medium">` would be replaced with `<div class="container medium">`.
 
 ### CmsFieldType
 Enumeration containing field types supported within the SDK.
