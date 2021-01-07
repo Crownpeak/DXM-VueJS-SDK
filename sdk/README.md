@@ -54,3 +54,4 @@ Data Sources**
 | 2.4.0         | 2020OCT09     | Improved uploading and relinking, new page and component creation settings, new --only option. Bug fixes. |
 | 3.0.0         | 2020NOV06     | Change to asynchronous data loading, drag and drop zone governance, multi-file component support. Bug fixes. |
 | 3.1.0         | 2021JAN04     | Add cp-scaffold for pages, ignore non-Crownpeak components, string replacements via .cpscaffold.json. |
+| 3.2.0         | 2021JAN07     | Add cp-scaffold for wrappers, option to include metadata on pages, $file macro in CMS_STATIC_CONTENT_LOCATION. |
