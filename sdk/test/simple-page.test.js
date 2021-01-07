@@ -16,6 +16,7 @@ describe('Simple Page', () => {
         assert.strictEqual(pages[0].name, "SimplePage");
         assert.strictEqual(pages[0].wrapper, "SimpleWrapper");
         assert.strictEqual(pages[0].useTmf, true);
+        assert.strictEqual(pages[0].useMetadata, true);
         assert.strictEqual(pages[0].suppressFolder, true);
         assert.strictEqual(pages[0].suppressModel, true);
     });

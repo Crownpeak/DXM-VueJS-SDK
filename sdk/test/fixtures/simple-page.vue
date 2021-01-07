@@ -16,6 +16,7 @@
         cmsSuppressModel: true,
         cmsSuppressFolder: true,
         cmsUseTmf: true,
+        cmsUseMetadata: true,
         cmsWrapper: "SimpleWrapper",
         name: "SimplePage",
         components: {

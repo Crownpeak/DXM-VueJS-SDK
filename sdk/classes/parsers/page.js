@@ -64,7 +64,7 @@ const parse = (content, file) => {
                     if (result) {
                         const processedResult = utils.replaceAssets(file, finalProcessMarkup(result), cssParser);
                         uploads = uploads.concat(processedResult.uploads);
-                        results.push({name: name, content: processedResult.content, wrapper: cmsProps.wrapper, useTmf: cmsProps.useTmf === true, suppressFolder: cmsProps.suppressFolder === true, suppressModel: cmsProps.suppressModel === true});
+                        results.push({name: name, content: processedResult.content, wrapper: cmsProps.wrapper, useTmf: cmsProps.useTmf === true, useMetadata: cmsProps.useMetadata === true, suppressFolder: cmsProps.suppressFolder === true, suppressModel: cmsProps.suppressModel === true});
                     }
                 }
             }
@@ -78,6 +78,7 @@ const processCmsProperties = (content, name, declaration, imports) => {
         suppressFolder: getCmsProperty(declaration, "cmsSuppressFolder", false),
         suppressModel: getCmsProperty(declaration, "cmsSuppressModel", false),
         useTmf: getCmsProperty(declaration, "cmsUseTmf", false),
+        useMetadata: getCmsProperty(declaration, "cmsUseMetadata", false),
         wrapper: getCmsProperty(declaration, "cmsWrapper", undefined)
     };
 };
