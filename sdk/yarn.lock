@@ -321,10 +321,10 @@ crownpeak-dxm-accessapi-helper@^1.0.5:
     request-promise "^4.2.4"
     request-promise-native "^1.0.7"
 
-crownpeak-dxm-sdk-core@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-3.2.0.tgz#c76ca1f45314607904a568e280d80c0b47100508"
-  integrity sha512-jSA1+ufMkNqZ0mgcyp8WLsgRy5DxZ2qrUDMHYrDi9mpODWaSulao5i/sHIxb9Ioj68Gyxk/EVlJuzYeR8MmqJQ==
+crownpeak-dxm-sdk-core@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/crownpeak-dxm-sdk-core/-/crownpeak-dxm-sdk-core-3.2.1.tgz#3449a91391f57983def289f0cec2ded8df00e7d0"
+  integrity sha512-25wlvKanozb1+FKKyzqO28DJoOvkpc6F9160TvVQj2NQ8PZBQj0bewbzlohqwAlIGULO04XJJMwPLXAxE+tkAg==
   dependencies:
     crownpeak-dxm-accessapi-helper "^1.0.5"
     minimist "^1.2.5"
