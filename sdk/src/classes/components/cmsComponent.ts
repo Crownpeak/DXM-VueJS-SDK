@@ -7,6 +7,7 @@ import { CmsDataCache, CmsDataSource } from 'crownpeak-dxm-sdk-core';
 export default class CmsComponent extends Vue {
     cmsFolder?: string = "";
     cmsZones?: string[] = [];
+    cmsDisableDragDrop?: boolean = false;
     created(): void {
         CmsDataCache.cmsComponentName = (this.$options as ICmsComponentOptions)._componentTag;
         // TODO: pass in data source like props on React?
