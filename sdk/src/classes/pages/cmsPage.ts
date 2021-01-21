@@ -14,6 +14,9 @@ export default class CmsPage extends Vue {
     cmsSuppressModel: boolean = false;
     cmsSuppressFolder: boolean = false;
     isLoaded: boolean = false;
+    $cmsLoadDataTimeout?: number;
+    $cmsDataLoaded?: (data: object, assetId: number) => object;
+    $cmsDataError?: (exception: any, assetId: number) => void;
 
     created (): void {
         if (!this.$cmsAssetId && this.$router && this.$route) {
@@ -23,7 +26,17 @@ export default class CmsPage extends Vue {
         }
         if(this.$cmsAssetId) {
             const that = this;
-            (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId).then(() => that.isLoaded = true);
+            let isError = false;
+            (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId, this.$cmsLoadDataTimeout).catch((ex) => {
+                isError = true;
+                if (that.$cmsDataError) that.$cmsDataError(ex, that.$cmsAssetId || -1);
+                else console.error(ex);
+            }).then(() => {
+                if (!isError) {
+                    if (that.$cmsDataLoaded) CmsDataCache.set(that.$cmsAssetId || -1, that.$cmsDataLoaded(CmsDataCache.get(that.$cmsAssetId || -1), that.$cmsAssetId || -1) || CmsDataCache.get(that.$cmsAssetId || -1));
+                    that.isLoaded = true;
+                }
+            });
             CmsDataCache.cmsAssetId = this.$cmsAssetId;
         }
         else {

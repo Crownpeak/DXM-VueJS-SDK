@@ -198,6 +198,25 @@ Loads payload data from DXM Dynamic Content API upon request - expects knowledge
 </script>
 ```
 
+### Data Timeouts
+If you wish to limit the time available for your page to load its data, you can specify a timeout in milliseconds like this:.
+```
+Vue.prototype.$cmsLoadDataTimeout = 3000; // Timeout after 3 seconds
+```
+Note that if a timeout occurs when loading dynamic data, it will automatically attempt to fall back to loading static data, with the same timeout value. If this succeeds, you will see a warning in the browser console. If it fails, the cmsDataError event will be triggered as described below, or you will see an error in the browser console.
+
+### Data Events
+If you want to know when your data has loaded, or whether an error occurred during load, you can use the following:
+```
+Vue.prototype.$cmsDataLoaded = (data, assetId) => {
+    alert(`Loaded ${assetId}, ${JSON.stringify(data)}`);
+}; 
+Vue.prototype.$cmsDataError = (exception, assetId) => {
+    alert(`Error ${assetId}, ${exception}`);
+};
+```
+Inside `$cmsDataLoaded` it is also possible to modify or replace the loaded data. Return an object from your function to do this.
+
 ### CmsComponent
 Includes CmsField references for content rendering from DXM within a Vue.js Component.
 ```
