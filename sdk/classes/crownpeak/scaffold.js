@@ -20,7 +20,7 @@ const processCommand = (options) => {
     const files = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 
     let components = [], pages = [], wrappers = [], uploads = [];
-    const htmlfiles = files.getRecursive(cwd, "html");
+    const htmlfiles = files.getRecursive(cwd, "html", (config.CMS_SCAFFOLD_IGNORE ? config.CMS_SCAFFOLD_IGNORE.split(",") : []));
     for (let f in htmlfiles) {
         //console.log(`Processing ${htmlfiles[f]}`);
         let result = parser.process(htmlfiles[f]);
@@ -33,7 +33,7 @@ const processCommand = (options) => {
             wrappers.push(result.wrapper);
         }
     }
-    const vueFiles = files.getRecursive(cwd, "vue");
+    const vueFiles = files.getRecursive(cwd, "vue", (config.CMS_SCAFFOLD_IGNORE ? config.CMS_SCAFFOLD_IGNORE.split(",") : []));
     for (let f in vueFiles) {
         //console.log(`Processing ${vueFiles[f]}`);
         let result = parser.process(vueFiles[f]);

@@ -464,6 +464,7 @@ export default {
 | CMS_PROJECT   | DXM Project Asset Id.                                                     |
 | CMS_WORKFLOW  | DXM Workflow Id (to be applied to created Models).                        |
 | CMS_SERVER    | (Optional) Allows base Crownpeak DXM URL to be overridden.                |
+| CMS_SCAFFOLD_IGNORE | (Optional) One or more paths to ignore during scaffolding, separated by commas. Paths are resolved relative to the application root. |
 
 ```
 # Crownpeak DXM Configuration
@@ -476,6 +477,7 @@ CMS_PROJECT={Replace with Asset Id of Project}
 CMS_WORKFLOW={Replace with Workflow Id}
 CMS_STATIC_CONTENT_LOCATION=/content/json
 CMS_DYNAMIC_CONTENT_LOCATION=//searchg2.crownpeak.net/{Replace with Search G2 Collection Name}/select/?wt=json
+CMS_SCAFFOLD_IGNORE=build,.cache
 ```
 
 Installation instructions:
