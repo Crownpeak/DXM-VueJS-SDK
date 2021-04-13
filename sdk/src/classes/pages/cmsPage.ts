@@ -17,6 +17,7 @@ export default class CmsPage extends Vue {
     $cmsLoadDataTimeout?: number;
     $cmsDataLoaded?: (data: object, assetId: number) => object;
     $cmsDataError?: (exception: any, assetId: number) => void;
+    $cmsBeforeLoadingData?: (options: XMLHttpRequest | RequestInit) => void;
 
     created (): void {
         if (!this.$cmsAssetId && this.$router && this.$route) {
@@ -27,6 +28,7 @@ export default class CmsPage extends Vue {
         if(this.$cmsAssetId) {
             const that = this;
             let isError = false;
+            (this.cmsDataProvider || new CmsNullDataProvider()).setPreLoad(this.$cmsBeforeLoadingData);
             (this.cmsDataProvider || new CmsNullDataProvider()).getSingleAsset(this.$cmsAssetId, this.$cmsLoadDataTimeout).catch((ex) => {
                 isError = true;
                 if (that.$cmsDataError) that.$cmsDataError(ex, that.$cmsAssetId || -1);

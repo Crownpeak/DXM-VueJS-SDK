@@ -206,16 +206,29 @@ Vue.prototype.$cmsLoadDataTimeout = 3000; // Timeout after 3 seconds
 Note that if a timeout occurs when loading dynamic data, it will automatically attempt to fall back to loading static data, with the same timeout value. If this succeeds, you will see a warning in the browser console. If it fails, the cmsDataError event will be triggered as described below, or you will see an error in the browser console.
 
 ### Data Events
-If you want to know when your data has loaded, or whether an error occurred during load, you can use the following:
-```
+If you want to know when your data has loaded, or whether an error occurred during load, or you wish to modify properties of a request before it is sent, you can use the following:
+```javascript
 Vue.prototype.$cmsDataLoaded = (data, assetId) => {
     alert(`Loaded ${assetId}, ${JSON.stringify(data)}`);
 }; 
 Vue.prototype.$cmsDataError = (exception, assetId) => {
     alert(`Error ${assetId}, ${exception}`);
 };
+Vue.prototype.$cmsBeforeLoadingData = (options) => {
+    // options will be either:
+    // * an XmlHttpRequest for synchronous data requests; or
+    // * a RequestInit object for asynchronous data requests, which will be passed to the fetch call.
+};
 ```
 Inside `$cmsDataLoaded` it is also possible to modify or replace the loaded data. Return an object from your function to do this.
+
+Inside `$cmsBeforeLoadingData` any modifications you make to the `options` object will be passed to the data request.
+
+If you have global changes that you wish to make for all data requests, these can be set directly on the `CmsStaticDataProvider` and `CmsDynamicDataProvider` objects via static properties.
+```javascript
+CmsStaticDataProvider.beforeLoadingData = (options) => alert("Before loading static data");
+CmsDynamicDataProvider.beforeLoadingData = (options) => alert("Before loading dynamic data");
+```
 
 ### CmsComponent
 Includes CmsField references for content rendering from DXM within a Vue.js Component.
