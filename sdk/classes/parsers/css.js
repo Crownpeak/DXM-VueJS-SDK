@@ -5,12 +5,12 @@ const utils = require("crownpeak-dxm-sdk-core/lib/crownpeak/utils");
 const reUrl = /url\s*\(\s*((["']?)([^)]*)\2)\s*\)/ig;
 const reContent = /content\s*:\s*\s*(["'])(.)\1/ig;
 
-const parse = (file, content, folderRoot) => {
+const parse = (file, content, folderRoot, prefix = "") => {
     //console.log(`DEBUG: CSS Parsing ${file}`);
-    return replaceUrls(file, content, folderRoot);
+    return replaceUrls(file, content, folderRoot, prefix);
 };
 
-const replaceUrls = (file, content, folderRoot) => {
+const replaceUrls = (file, content, folderRoot, prefix) => {
     let result = content;
     let uploads = [];
 
@@ -20,7 +20,10 @@ const replaceUrls = (file, content, folderRoot) => {
             let url = matches[3];
             if (url.indexOf("http") < 0 && url.indexOf("//") < 0) {
                 //console.log(`Found url candidate ${url}`);
-                const { path: filepath, folder: dir, filename } = utils.getPaths(file, url);
+                let { path: filepath, folder: dir, filename } = utils.getPaths(file, url);
+                if (prefix && dir.startsWith(prefix)) {
+                    dir = dir.substr(prefix.length);
+                }
                 if (fs.existsSync(filepath)) {
                     let replacement = `"<%= Asset.Load(Asset.GetSiteRoot(asset).AssetPath + \"/${dir}${filename}\").GetLink() %>"`;
                     //console.log(`Replacement is ${replacement}`);
