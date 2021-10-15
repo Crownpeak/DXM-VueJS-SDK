@@ -58,3 +58,4 @@ Data Sources**
 | 3.2.1         | 2021JAN08     | Extra macro option using {file} in CMS_STATIC_CONTENT_LOCATION. |
 | 3.3.0         | 2021JAN13     | Add cmsDisableDragDrop option to mark components unsuitable for Drag and Drop. |
 | 3.4.0         | 2021MAR15     | Bug fixes. |
+| 3.5.0         | 2021OCT15     | Template Builder supports default template files, bug fixes. |
