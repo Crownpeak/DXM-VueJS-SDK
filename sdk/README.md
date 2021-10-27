@@ -59,3 +59,4 @@ Data Sources**
 | 3.3.0         | 2021JAN13     | Add cmsDisableDragDrop option to mark components unsuitable for Drag and Drop. |
 | 3.4.0         | 2021MAR15     | Bug fixes. |
 | 3.5.0         | 2021OCT15     | Template Builder supports default template files, bug fixes. |
+| 3.5.1         | 2021OCT27     | Bug fix for error when updating a model inside a project branch. |
