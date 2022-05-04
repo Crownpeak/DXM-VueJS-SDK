@@ -8,6 +8,9 @@ const content = fs.readFileSync(file, 'utf8');
 const { components, uploads } = parser.parse(content, file);
 
 describe('Component With Scaffold', () => {
+    if (components.length > 0 && components[0].content && components[0].content.replace) {
+        components[0].content = components[0].content.replace(/(?<!\r)\n/g, "\r\n");
+    }
     it('should find no uploads', () => {
         assert.strictEqual(uploads.length, 0);
     });

@@ -8,6 +8,9 @@ const content = fs.readFileSync(file, 'utf8');
 const { pages, uploads } = parser.parse(content, file);
 
 describe('Page With DropZone', () => {
+    if (pages.length > 0 && pages[0].content && pages[0].content.replace) {
+        pages[0].content = pages[0].content.replace(/(?<!\r)\n/g, "\r\n");
+    }
     it('should find no uploads', () => {
         assert.strictEqual(uploads.length, 0);
     });

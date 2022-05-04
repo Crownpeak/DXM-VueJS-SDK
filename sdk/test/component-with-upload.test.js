@@ -8,6 +8,9 @@ const content = fs.readFileSync(file, 'utf8');
 const { components, uploads } = parser.parse(content, file);
 
 describe('Component With Upload', () => {
+    if (components.length > 0 && components[0].content && components[0].content.replace) {
+        components[0].content = components[0].content.replace(/(?<!\r)\n/g, "\r\n");
+    }
     it('should find one upload', () => {
         assert.strictEqual(uploads.length, 1);
         assert.strictEqual(uploads[0].name, "logo.png");

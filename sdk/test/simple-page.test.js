@@ -8,6 +8,9 @@ const content = fs.readFileSync(file, 'utf8');
 const { pages, uploads } = parser.parse(content, file);
 
 describe('Simple Page', () => {
+    if (pages.length > 0 && pages[0].content && pages[0].content.replace) {
+        pages[0].content = pages[0].content.replace(/(?<!\r)\n/g, "\r\n");
+    }
     it('should not find any uploads', () => {
         assert.strictEqual(uploads.length, 0);
     });
