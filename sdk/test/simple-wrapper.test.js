@@ -8,6 +8,8 @@ const content = fs.readFileSync(file, 'utf8');
 const { wrapper, uploads } = parser.parse(file, content);
 
 describe('Simple Wrapper', () => {
+    wrapper.head = wrapper.head.replace(/(?<!\r)\n/g, "\r\n");
+    wrapper.foot = wrapper.foot.replace(/(?<!\r)\n/g, "\r\n");
     it('should not find any uploads', () => {
         assert.strictEqual(uploads.length, 0);
     });
