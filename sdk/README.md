@@ -60,3 +60,4 @@ Data Sources**
 | 3.4.0         | 2021MAR15     | Bug fixes. |
 | 3.5.0         | 2021OCT15     | Template Builder supports default template files, bug fixes. |
 | 3.5.1         | 2021OCT27     | Bug fix for error when updating a model inside a project branch. |
+| 4.0.0         | 2022MAY05     | Update package.json to allow newer versions of Vue.js to be used. |
