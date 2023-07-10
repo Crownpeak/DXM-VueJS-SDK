@@ -61,3 +61,4 @@ Data Sources**
 | 3.5.0         | 2021OCT15     | Template Builder supports default template files, bug fixes. |
 | 3.5.1         | 2021OCT27     | Bug fix for error when updating a model inside a project branch. |
 | 4.0.0         | 2022MAY05     | Update package.json to allow newer versions of Vue.js to be used. |
+| 4.1.0         | 2023-07-10    | Bump DXM SDK Core version to remove vulnerable dependencies. |

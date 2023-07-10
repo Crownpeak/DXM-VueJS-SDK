@@ -1,12 +1,12 @@
 {
   "name": "crownpeak-dxm-vuejs-sdk",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Crownpeak Digital Experience Management (DXM) Software Development Kit (SDK) for Vue.js has been constructed to assist the Single Page App developer in developing client-side applications that leverage DXM for content management purposes.",
   "repository": "https://github.com/Crownpeak/DXM-VueJS-SDK",
   "main": "dist/entry.js",
   "license": "MIT",
   "dependencies": {
-    "crownpeak-dxm-sdk-core": "^3.5.1"
+    "crownpeak-dxm-sdk-core": "^3.6.0"
   },
   "bin": {
     "crownpeak": "./classes/crownpeak/cmsify.js"
